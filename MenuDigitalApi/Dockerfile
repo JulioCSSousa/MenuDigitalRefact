@@ -5,10 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copia csproj de cada projeto (aproveita cache do restore)
-COPY MenuDigital.Application.csproj MenuDigitalApi/
-COPY MenuDigital.Domain.csproj MenuDigitalApi/
-COPY MenuDigital.Infrastructure.csproj MenuDigitalApi/
-COPY MenuDigitalApi.csproj MenuDigitalApi/
+COPY ..
 
 # Restaura pacotes
 RUN dotnet restore MenuDigitalApi/MenuDigitalApi.csproj
