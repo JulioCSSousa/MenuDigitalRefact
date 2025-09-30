@@ -2,10 +2,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copia tudo
-COPY . 
+COPY . .
 
-RUN dotnet restore MenuDigitalApi.csproj
-RUN dotnet publish MenuDigitalApi.csproj -c Release -o /app/publish
+RUN dotnet restore MenuDigitalApi/MenuDigitalApi.csproj
+RUN dotnet publish MenuDigitalApi/MenuDigitalApi.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
