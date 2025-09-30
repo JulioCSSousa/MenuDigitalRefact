@@ -5,7 +5,7 @@ WORKDIR /src
 COPY . .
 
 RUN dotnet restore MenuDigitalApi.csproj
-RUN dotnet publish MenuDigitalApi/MenuDigitalApi.csproj -c Release -o /app/publish
+RUN dotnet publish MenuDigitalApi.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
