@@ -4,11 +4,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia os arquivos de projeto primeiro (aproveita cache do Docker)
-COPY . .
+# Copia csproj de cada projeto para aproveitar cache
+COPY MenuDigital.Application/MenuDigital.Application.csproj MenuDigital.Application/
+COPY MenuDigital.Domain/MenuDigital.Domain.csproj MenuDigital.Domain/
+COPY MenuDigital.Infrastructure/MenuDigital.Infrastructure.csproj MenuDigital.Infrastructure/
+COPY MenuDigital.Shared/MenuDigital.Shared.csproj MenuDigital.Shared/
+COPY MenuDigitalApi/MenuDigitalApi.csproj MenuDigitalApi/
 
 # Restaura pacotes
-RUN dotnet restore MenuDigitalApi.csproj
+RUN dotnet restore MenuDigitalApi/MenuDigitalApi.csproj
 
 # Copia o restante do código
 COPY . .
@@ -22,7 +26,7 @@ RUN dotnet publish MenuDigitalApi/MenuDigitalApi.csproj -c Release -o /app/publi
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Copia os arquivos publicados
+# Copia arquivos publicados
 COPY --from=build /app/publish .
 
 # Render usa variável de ambiente PORT
