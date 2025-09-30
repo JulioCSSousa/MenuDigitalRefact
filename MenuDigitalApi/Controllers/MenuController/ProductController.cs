@@ -1,9 +1,5 @@
-// Api/Controllers/ProductsController.cs
-using MenuDigital.Application.DTOs.Products.Request;
-using MenuDigital.Application.DTOs.Products.Request.Create;
 using MenuDigital.Application.DTOs.Products.Request.Update;
 using MenuDigital.Application.DTOs.Products.Request.Update.Create;
-using MenuDigital.Application.DTOs.Products.Response;
 using MenuDigital.Application.DTOs.Products.Response.ProductMenu;
 using MenuDigital.Application.DTOs.Transformers.Product;
 using MenuDigital.Application.Services;
