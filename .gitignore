@@ -1,0 +1,54 @@
+# Visual Studio cache
+.vs/
+\appsettings.json
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Configurações locais
+appsettings.Development.json
+appsettings.Local.json
+
+# Logs
+*.log
+*.tlog
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.dbmdl
+*.jfm
+
+# Rider / VSCode
+.idea/
+.vscode/
+
+# Test Results
+TestResult*/
+*.trx
+
+# Pacotes
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+*.bak
+
+# Node (caso use frontend com npm/yarn/pnpm)
+node_modules/
+dist/
+
+# Docker
+docker-compose.override.yml
