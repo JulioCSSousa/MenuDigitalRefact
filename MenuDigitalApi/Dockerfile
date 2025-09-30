@@ -9,7 +9,7 @@ COPY MenuDigital.Application/MenuDigital.Application.csproj MenuDigital.Applicat
 COPY MenuDigital.Domain/MenuDigital.Domain.csproj MenuDigital.Domain/
 COPY MenuDigital.Infrastructure/MenuDigital.Infrastructure.csproj MenuDigital.Infrastructure/
 COPY MenuDigital.Shared/MenuDigital.Shared.csproj MenuDigital.Shared/
-COPY MenuDigitalApi.csproj
+COPY restore MenuDigitalApi/MenuDigitalApi.csproj
 
 # Restaura pacotes
 RUN dotnet restore MenuDigitalApi.csproj
