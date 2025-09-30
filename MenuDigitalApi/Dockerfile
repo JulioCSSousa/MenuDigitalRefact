@@ -5,11 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copia os arquivos de projeto primeiro (aproveita cache do Docker)
-COPY MenuDigital.Application/MenuDigital.Application.csproj MenuDigital.Application/
-COPY MenuDigital.Domain/MenuDigital.Domain.csproj MenuDigital.Domain/
-COPY MenuDigital.Infrastructure/MenuDigital.Infrastructure.csproj MenuDigital.Infrastructure/
-COPY MenuDigital.Shared/MenuDigital.Shared.csproj MenuDigital.Shared/
-COPY restore MenuDigitalApi/MenuDigitalApi.csproj
+COPY . .
 
 # Restaura pacotes
 RUN dotnet restore MenuDigitalApi.csproj
