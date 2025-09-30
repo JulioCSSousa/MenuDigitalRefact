@@ -10,9 +10,6 @@ COPY ..
 # Restaura pacotes
 RUN dotnet restore MenuDigitalApi/MenuDigitalApi.csproj
 
-# Copia o resto do código
-COPY . .
-
 # Publica em Release
 RUN dotnet publish MenuDigitalApi/MenuDigitalApi.csproj -c Release -o /app/publish
 
