@@ -1,13 +1,8 @@
 ﻿// Application/Services/ProductService.cs
 using MenuDigital.Application.Interfaces;
+using MenuDigital.Application.Interfaces.Menu;
 using MenuDigital.Domain.Entities;
-using MenuDigital.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace MenuDigital.Application.Services
 {

@@ -1,14 +1,15 @@
-﻿using MenuDigital.Domain.Entities;
+﻿// Domain/Interfaces/IProductRepository.cs
 
-namespace MenuDigital.Application.Interfaces.Menu
+// Domain/Interfaces/IProductRepository.cs
+using MenuDigital.Domain.Entities;
+
+namespace MenuDigital.Application.Interfaces.Menu;
+public interface IProductRepository
 {
-    internal interface IProductRepository
-    {
-        Task<ProductModel?> GetByIdAsync(string id);
-        Task<IEnumerable<ProductModel>> GetAllAsync();
-        Task AddAsync(ProductModel product);
-        Task UpdateAsync(string id, ProductModel product);
-        Task DeleteAsync(string id);
-
-    }
+    Task<ProductModel?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default);
+    Task<ICollection<ProductModel>> GetAllAsync(CancellationToken ct = default);
+    Task AddAsync(ProductModel product, CancellationToken ct = default);
+    Task UpdateAsync(ProductModel product, CancellationToken ct = default);
+    Task DeleteAsync(ProductModel product, CancellationToken ct = default);
 }

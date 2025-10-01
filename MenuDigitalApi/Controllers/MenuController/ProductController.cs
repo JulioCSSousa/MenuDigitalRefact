@@ -1,10 +1,11 @@
-using MenuDigital.Application.DTOs.Products.Request.Update;
-using MenuDigital.Application.DTOs.Products.Request.Update.Create;
-using MenuDigital.Application.DTOs.Products.Response.ProductMenu;
-using MenuDigital.Application.DTOs.Transformers.Product;
+
 using MenuDigital.Application.Services;
 using MenuDigital.Domain.Entities;
 using MenuDigital.Domain.Entities.MenuModels;
+using MenuDigitalApi.DTOs.Menu.Products.Request.Update;
+using MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu;
+using MenuDigitalApi.DTOs.Transformers.Product;
+using MenuDigitalApi.DTOs.Menu.Products.Request.Create;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MenuDigitalApi.Controllers.MenuController
@@ -25,10 +26,6 @@ namespace MenuDigitalApi.Controllers.MenuController
         {
             var result = await _productService.GetAllAsync(ct);
             var productDto = new List<ProductGetAllReponseDto>();
-            if (result == null || result.Count == 0)
-            {
-                return NotFound();
-            }
 
             foreach (var item in result)
             {
@@ -81,10 +78,9 @@ namespace MenuDigitalApi.Controllers.MenuController
                 }
             }
 
-
             var dbProduct = new ProductModel
             {
-                StoreId = product?.StoreId,
+                MenuId = product?.MenuId,
                 Category = category,
                 Name = product.Name,
                 CombinedPrice = product.CombinedPrice,

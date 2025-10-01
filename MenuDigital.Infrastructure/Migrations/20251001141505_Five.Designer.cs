@@ -3,6 +3,7 @@ using System;
 using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuDigital.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001141505_Five")]
+    partial class Five
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,29 +132,6 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.ToTable("CombinedProducts");
                 });
 
-            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.MenuModel", b =>
-                {
-                    b.Property<Guid>("MenuId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MenuName")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("MenuId");
-
-                    b.ToTable("Menu");
-                });
-
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>
                 {
                     b.Property<Guid>("ProductId")
@@ -175,13 +155,6 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.Property<bool>("IsSale")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("MenuId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("MenuModelMenuId")
-                        .HasColumnType("char(36)");
-
                     b.Property<bool>("Multiple")
                         .HasColumnType("tinyint(1)");
 
@@ -195,9 +168,11 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
-                    b.HasKey("ProductId");
+                    b.Property<string>("StoreId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.HasIndex("MenuModelMenuId");
+                    b.HasKey("ProductId");
 
                     b.ToTable("Products");
                 });
@@ -508,10 +483,6 @@ namespace MenuDigital.Infrastructure.Migrations
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>
                 {
-                    b.HasOne("MenuDigital.Domain.Entities.MenuModels.MenuModel", null)
-                        .WithMany("Products")
-                        .HasForeignKey("MenuModelMenuId");
-
                     b.OwnsMany("MenuDigital.Domain.Entities.PreviewPrice", "PreviewPrices", b1 =>
                         {
                             b1.Property<Guid>("ProductModelProductId")
@@ -738,11 +709,6 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.MenuModel", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>

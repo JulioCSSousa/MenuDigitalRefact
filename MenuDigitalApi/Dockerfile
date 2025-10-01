@@ -2,14 +2,19 @@
 # Etapa 1: Build
 # ----------------------------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /
+WORKDIR /src
 
-# Copia os arquivos de projeto primeiro (aproveita cache do Docker)
-COPY . .
+# Copia apenas csproj primeiro (cache das deps)
+COPY MenuDigitalApi/*.csproj MenuDigitalApi/
+COPY MenuDigital.Application/*.csproj MenuDigital.Application/
+COPY MenuDigital.Domain/*.csproj MenuDigital.Domain/
+COPY MenuDigital.Infrastructure/*.csproj MenuDigital.Infrastructure/
 
 # Restaura pacotes
 RUN dotnet restore MenuDigitalApi/MenuDigitalApi.csproj
 
+# Copia o resto
+COPY . .
 
 # Publica em Release
 RUN dotnet publish MenuDigitalApi/MenuDigitalApi.csproj -c Release -o /app/publish
@@ -23,7 +28,5 @@ WORKDIR /app
 # Copia os arquivos publicados
 COPY --from=build /app/publish .
 
-# Render usa variável de ambiente PORT
-ENV ASPNETCORE_URLS=http://+:${PORT}
 
 ENTRYPOINT ["dotnet", "MenuDigitalApi.dll"]

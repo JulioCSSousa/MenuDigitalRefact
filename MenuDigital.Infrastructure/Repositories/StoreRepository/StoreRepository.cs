@@ -1,5 +1,5 @@
-﻿using MenuDigital.Domain.Entities;
-using MenuDigital.Domain.Interfaces;
+﻿using MenuDigital.Application.Interfaces.Store;
+using MenuDigital.Domain.Entities;
 using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using Microsoft.EntityFrameworkCore;
 

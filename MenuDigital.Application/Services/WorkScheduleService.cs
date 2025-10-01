@@ -1,4 +1,4 @@
-﻿using MenuDigital.Application.Interfaces;
+﻿using MenuDigital.Application.Interfaces.Store;
 using MenuDigital.Domain.Entities;
 using MenuDigital.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;

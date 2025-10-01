@@ -1,6 +1,6 @@
-﻿
-using MenuDigital.Domain.Entities;
+﻿using MenuDigital.Domain.Entities.ValuesObjects;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MenuDigital.Domain.Entities
 {
@@ -12,8 +12,9 @@ namespace MenuDigital.Domain.Entities
         public string? Name { get; set; }
         [MaxLength(500)]
         public string? Description { get; set; }
+        [NotMapped]
+        public List<Colors> Colors { get; set; }
 
-        public List<ProductModel>? Products { get; set; } = new List<ProductModel>();
-        public List<StoreModel>? Stores { get; set; } = new List<StoreModel>();
     }
+
 }

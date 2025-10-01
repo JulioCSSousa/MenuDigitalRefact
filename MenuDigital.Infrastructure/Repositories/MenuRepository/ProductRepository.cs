@@ -1,5 +1,5 @@
-﻿using MenuDigital.Domain.Entities;
-using MenuDigital.Domain.Interfaces;
+﻿using MenuDigital.Application.Interfaces.Menu;
+using MenuDigital.Domain.Entities;
 using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,12 +17,12 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(p => p.ProductId.ToString() == sid, ct);
     }
 
-    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default)
+    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid menuId, CancellationToken ct = default)
     {
-        var sid = storeId.ToString();
+        var sid = menuId.ToString();
         return await _context.Products
             .AsNoTracking()
-            .Where(p => p.StoreId == sid)
+            .Where(p => p.MenuId == sid)
             .ToListAsync(ct);
     }
 

@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using MenuDigital.Application.Interfaces;
+using MenuDigital.Application.Interfaces.Store;
 using MenuDigital.Domain.Entities;
-using MenuDigital.Domain.Interfaces;
 
 namespace MenuDigital.Application.Services
 {

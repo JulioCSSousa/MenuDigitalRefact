@@ -1,13 +1,12 @@
-
+ï»¿
 using AutoMapper;
 using MenuDigital.Application.Interfaces;
+using MenuDigital.Application.Interfaces.Menu;
 using MenuDigital.Application.Interfaces.Store;
-using MenuDigital.Application.Mapper;
 using MenuDigital.Application.Services;
 using MenuDigital.Domain.Interfaces;
 using MenuDigital.Domain.Models.Entities;
 using MenuDigital.Infrastructure.Context.Repositories;
-using MenuDigital.Infrastructure.Mongo;
 using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using MenuDigital.Infrastructure.Repositories;
 using MenuDigital.Infrastructure.Repositories.StoreRepository;
@@ -25,21 +24,29 @@ namespace MenuDigitalApi
 
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 10));
 
-            // pegar string de conexão do appsettings.json
-            var mongoConn = builder.Configuration.GetConnectionString("MongoDb")!;
-            var mongoDbName = builder.Configuration["MongoDbName"] ?? "MenuDigitalDb";
 
-            // registra MongoDbService como singleton
-            builder.Services.AddSingleton(new MongoDbService(mongoConn, mongoDbName));
+            string cs;
 
-            // MySQL Conection
-            var cs = builder.Configuration.GetConnectionString("LocalSQL");
+            if (builder.Environment.IsProduction())
+            {
+                var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+                var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+                var dbPass = Environment.GetEnvironmentVariable("DB_PASS");
+                var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+
+                cs = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPass};";
+            }
+            else
+            {
+                cs = builder.Configuration.GetConnectionString("DefaultConnection");
+            }
+
             builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseMySql(cs, serverVersion,
         b => b.MigrationsAssembly("MenuDigital.Infrastructure")));
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddEndpointsApiExplorer();
@@ -49,15 +56,13 @@ namespace MenuDigitalApi
             builder.Services.AddScoped<IStorePaymentRepository, StorePaymentRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
-            // Services de aplicação
+            builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+            // Services de aplicaÃ§Ã£o
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<StoreService>();
             builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
             builder.Services.AddScoped<StorePaymentService>();
-
-            builder.Services.AddAutoMapper(cfg => {
-
-            }, typeof(ProductProfile) );
+            builder.Services.AddScoped<MenuService>();
 
 
             builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -79,26 +84,29 @@ namespace MenuDigitalApi
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 
+            if (builder.Environment.IsProduction())
+            {
+                var port = Environment.GetEnvironmentVariable("PORT");
+                builder.WebHost.UseUrls($"http://*:{port}");
+            }
+ 
+
+
             var app = builder.Build();
-            using (var scope = app.Services.CreateScope())
-            {
-                var mongo = scope.ServiceProvider.GetRequiredService<MongoDbService>();
-            }
 
-            app.MapGet("/", () => "API Mongo conectada!");
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MenuDigital API V1");
+                c.RoutePrefix = "swagger"; 
+            });
+
             app.UseRouting();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-
+            app.MapGet("/", () => Results.Ok("âœ… MenuDigital API Running"));
             app.MapControllers();
 
             app.Run();

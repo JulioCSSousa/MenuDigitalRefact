@@ -11,6 +11,7 @@ public class AppDbContext : IdentityDbContext<User>
 {
     public AppDbContext(DbContextOptions<AppDbContext> opts) : base(opts) { }
 
+    public DbSet<MenuModel> Menu => Set<MenuModel>();
     public DbSet<ProductModel> Products => Set<ProductModel>();
     public DbSet<CombinedProduct> CombinedProducts => Set<CombinedProduct>();
     public DbSet<StoreModel> StoreModels => Set<StoreModel>();

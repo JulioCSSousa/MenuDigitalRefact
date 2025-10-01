@@ -10,7 +10,13 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-        var cs = "Server=localhost;Port=3306;User=root;Database=menudigitaldb;Password=4306;";
+        var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+        var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+        var dbUser = Environment.GetEnvironmentVariable("DB_USER");
+        var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+
+        var cs = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPass};";
 
         optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs),
             b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));

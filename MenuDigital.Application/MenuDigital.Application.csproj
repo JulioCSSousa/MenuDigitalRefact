@@ -11,11 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="DTOs\Products\Request\Create\ProductMenuCreate.cs" />
-    <None Include="DTOs\Products\Response\OrderResponse\OrderedProductsDto.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
   </ItemGroup>

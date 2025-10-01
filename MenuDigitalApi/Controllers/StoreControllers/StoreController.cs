@@ -1,6 +1,8 @@
 ﻿// Api/Controllers/StoresController.cs
 using MenuDigital.Application.Services;
 using MenuDigital.Domain.Entities;
+using MenuDigitalApi.DTOs.Store;
+using MenuDigitalApi.DTOs.Transformers.Store;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MenuDigitalApi.Controllers.StoreControllers
@@ -36,10 +38,20 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StoreModel Store, CancellationToken ct)
+        public async Task<IActionResult> Create(StoreCreateDto Store, CancellationToken ct)
         {
-            await _StoreService.AddAsync(Store, ct);
-            return CreatedAtAction(nameof(GetById), new { id = Store.StoreId }, Store);
+            var dbStore = StoreCreateTransform.ToDbModel(Store);
+            if(dbStore == null)
+            {
+                return BadRequest("Transform Failed and returned null");
+            }
+            await _StoreService.AddAsync(dbStore, ct);
+            foreach (var item in dbStore.WorkSchedule)
+            {
+                Console.WriteLine(item);
+            }
+            return Ok(dbStore);
+            
         }
 
         [HttpPost("{storeId}/schedule")]

@@ -1,4 +1,5 @@
 ﻿
+using MenuDigital.Domain.Entities.ValuesObjects;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -62,12 +63,5 @@ namespace MenuDigital.Domain.Entities
         [MaxLength(500)]
         public string? Header { get; set; }
     }
-    [NotMapped]
-    public class Colors
-    {
-        [MaxLength(100)]
-        public string? Primary { get; set; }
-        [MaxLength(100)]
-        public string? Secondary { get; set; }
-    }
+
 }
