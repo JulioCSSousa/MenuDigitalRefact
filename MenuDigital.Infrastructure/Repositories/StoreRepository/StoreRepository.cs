@@ -27,6 +27,8 @@ public class StoreRepository : IStoreRepository
     public async Task<ICollection<StoreModel>> GetAllAsync(CancellationToken ct = default)
     {
         return await _context.StoreModels
+            .Include(s => s.Category)
+            .Include(s => s.WorkSchedule)
             .Include(s => s.Address)
             .Include(s => s.StorePayments)
             .ToListAsync(ct);

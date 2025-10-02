@@ -11,17 +11,17 @@ namespace MenuDigitalApi.Controllers.StoreControllers
     [Route("api/[controller]")]
     public class StoreController : ControllerBase
     {
-        private readonly StoreService _StoreService;
+        private readonly StoreService _service;
 
         public StoreController(StoreService StoreService)
         {
-            _StoreService = StoreService ?? throw new ArgumentNullException(nameof(StoreService));
+            _service = StoreService ?? throw new ArgumentNullException(nameof(StoreService));
         }
 
         [HttpGet]
         public async Task<ActionResult<ICollection<StoreModel>>> GetAll(CancellationToken ct)
         {
-            var result = await _StoreService.GetAllAsync(ct);
+            var result = await _service.GetAllAsync(ct);
             if (result == null)
             {
                 return NotFound();
@@ -33,7 +33,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
         {
-            var Store = await _StoreService.GetByIdAsync(id, ct);
+            var Store = await _service.GetByIdAsync(id, ct);
             return Store is null ? NotFound() : Ok(Store);
         }
 
@@ -45,7 +45,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             {
                 return BadRequest("Transform Failed and returned null");
             }
-            await _StoreService.AddAsync(dbStore, ct);
+            await _service.AddAsync(dbStore, ct);
             foreach (var item in dbStore.WorkSchedule)
             {
                 Console.WriteLine(item);
@@ -60,7 +60,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         {
             try
             {
-                await _StoreService.AddAddressAsync(addressModel, storeId);
+                await _service.AddAddressAsync(addressModel, storeId);
             }
             catch (NullReferenceException ex)
             {
@@ -74,14 +74,14 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, StoreModel Store, CancellationToken ct)
         {
-            await _StoreService.UpdateAsync(id, Store, ct);
+            await _service.UpdateAsync(id, Store, ct);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
         {
-            await _StoreService.DeleteAsync(id, ct);
+            await _service.DeleteAsync(id, ct);
             return NoContent();
         }
     }
