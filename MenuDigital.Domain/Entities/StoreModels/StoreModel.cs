@@ -12,7 +12,7 @@ namespace MenuDigital.Domain.Entities
         [MaxLength(100)]
         [Required]
         public string? StoreName { get; set; }
-        public List<Category>? Category { get; set; } = new List<Category>();
+        public List<Category>? Category { get; set; }
         [MaxLength(500)]
         public string? Description { get; set; }
         [MaxLength(500)]
@@ -27,9 +27,8 @@ namespace MenuDigital.Domain.Entities
         public SocialMedia? SocialMedias { get; set; }
         [NotMapped]
         public Contact? Contacts { get; set; }
-        public List<AddressModel>? Address { get; set; } = new List<AddressModel>();
-        public List<WorkSchedule>? WorkSchedule { get; set; } = new List<WorkSchedule>();
-        [Required]
+        public List<AddressModel>? Address { get; set; } 
+        public List<WorkSchedule>? WorkSchedule { get; set; }
         public List<StorePayments>? StorePayments { get; set; }
         public string? Alert { get; set; }
         public double? MinOrderPrice { get; set; }

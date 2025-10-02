@@ -22,8 +22,8 @@ namespace MenuDigitalApi.DTOs.Store
         public Images? Images { get; set; }
         public SocialMedia? SocialMedias { get; set; }
         public Contact? Contacts { get; set; }
-        public List<AddressModel>? Address { get; set; } = new List<AddressModel>();
-        public List<WorkScheduleCreate>? WorkSchedule { get; set; } = new List<WorkScheduleCreate>();
+        public List<AddressModel>? Address { get; set; } 
+        public List<WorkScheduleCreate>? WorkSchedule { get; set; }
         public List<StorePayments>? StorePayments { get; set; }
         public string? Alert { get; set; }
         public double? MinOrderPrice { get; set; }

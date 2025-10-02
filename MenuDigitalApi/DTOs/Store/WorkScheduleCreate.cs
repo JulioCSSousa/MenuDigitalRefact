@@ -2,9 +2,9 @@
 {
     public class WorkScheduleCreate
     {
-        public DateTime Day { get; private set; }
-        public bool IsSelected { get; private set; }
-        public TimeSpan Start { get; private set; }
-        public TimeSpan End { get; private set; }
+        public DateTime Day { get; set; }
+        public bool IsSelected { get; set; }
+        public TimeSpan Start { get; set; }
+        public TimeSpan End { get; set; }
     }
 }

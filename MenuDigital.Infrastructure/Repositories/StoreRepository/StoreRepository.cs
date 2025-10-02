@@ -17,6 +17,8 @@ public class StoreRepository : IStoreRepository
     public async Task<StoreModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         return await _context.StoreModels
+            .Include(s => s.Category)
+            .Include(s => s.WorkSchedule)
             .Include(s => s.Address)
             .Include(s => s.StorePayments)
             .FirstOrDefaultAsync(p => p.StoreId == id, ct);
