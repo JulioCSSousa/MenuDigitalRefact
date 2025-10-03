@@ -1,61 +1,14 @@
 ﻿using MenuDigital.Domain.Entities;
 using MenuDigitalApi.DTOs.Store;
-using System.Net;
+using System.Linq;
 
 namespace MenuDigitalApi.DTOs.Transformers.Store
 {
-    public class StoreCreateTransform
+    public static class StoreCreateTransform
     {
-        static public StoreModel ToDbModel(StoreCreateDto dto)
+        public static StoreModel ToDbModel(StoreCreateDto dto)
         {
-            var workschedule = new List<WorkSchedule>();
-            if (dto.WorkSchedule != null) {
-                foreach (var item in dto.WorkSchedule)
-                {
-                    workschedule.Add(new WorkSchedule
-                    {
-                        Day = item.Day,
-                        End = item.End,
-                        IsSelected = item.IsSelected,
-                        Start = item.Start,
-                    });
-                }
-            }
-            else
-            {
-                workschedule = new List<WorkSchedule>();
-            }
-
-            var category = new List<Category>();
-            if (dto.Category != null) 
-            {
-                foreach (var item in dto.Category)
-                {
-                    category.Add( new Category
-                    {
-                        Name = item.Name,
-                        Description = item.Description,
-                    });
-                }
-            }
-
-            var address = new List<AddressModel>();
-            if (dto.Address != null)
-            {
-                foreach (var item in dto.Address)
-                {
-                    address.Add(new AddressModel
-                    {
-                        Street = item.Street,
-                        neighborhood = item.neighborhood,
-                        City = item.City,
-                        Complement = item.Complement,
-                        Number = item.Number,
-                        ZipCode = item.ZipCode,
-                    });
-                }
-            }
-            var dbStore = new StoreModel
+            return new StoreModel
             {
                 Alert = dto.Alert,
                 Closed = dto.Closed,
@@ -68,12 +21,44 @@ namespace MenuDigitalApi.DTOs.Transformers.Store
                 MinOrderPrice = dto.MinOrderPrice,
                 SocialMedias = dto.SocialMedias,
                 StoreName = dto.StoreName,
-                StorePayments = dto.StorePayments,
-                WorkSchedule = workschedule,
-                Category = category,
-                Address = address
+
+                WorkSchedule = dto.WorkSchedule?
+                    .Select(item => new WorkSchedule
+                    {
+                        Day = item.Day,
+                        IsSelected = item.IsSelected,
+                        Start = item.Start,
+                        End = item.End
+                    })
+                    .ToList() ?? new List<WorkSchedule>(),
+
+                Category = dto.Category?
+                    .Select(item => new Category
+                    {
+                        Name = item.Name,
+                        Description = item.Description
+                    })
+                    .ToList() ?? new List<Category>(),
+
+                Address = dto.Address?
+                    .Select(item => new AddressModel
+                    {
+                        Street = item.Street,
+                        neighborhood = item.neighborhood,
+                        City = item.City,
+                        Complement = item.Complement,
+                        Number = item.Number,
+                        ZipCode = item.ZipCode
+                    })
+                    .ToList() ?? new List<AddressModel>(),
+
+                StorePayments = dto.StorePayments?
+                    .Select(item => new StorePayments
+                    {
+                        PaymentsCount = item.PaymentsCount
+                    })
+                    .ToList() ?? new List<StorePayments>()
             };
-            return dbStore;
         }
     }
 }

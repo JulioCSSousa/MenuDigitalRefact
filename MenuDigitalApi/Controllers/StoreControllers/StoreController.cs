@@ -72,17 +72,24 @@ namespace MenuDigitalApi.Controllers.StoreControllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, StoreModel Store, CancellationToken ct)
+        public async Task<IActionResult> Update(Guid id, StoreUpdateDto storeDto, CancellationToken ct)
         {
-            await _service.UpdateAsync(id, Store, ct);
-            return NoContent();
+            var storeDb = await _service.GetByIdAsync(id);
+            if(storeDb == null)
+            {
+                return BadRequest("Store not found");
+            }
+
+            StoreUpdateTransformer.ApplyUpdate(storeDb, storeDto);
+            await _service.UpdateAsync(id, storeDb, ct);
+            return Ok("Successfully Saved");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
         {
             await _service.DeleteAsync(id, ct);
-            return NoContent();
+            return Ok("Successfully Deleted");
         }
     }
 

@@ -89,8 +89,16 @@ namespace MenuDigitalApi
                 var port = Environment.GetEnvironmentVariable("PORT");
                 builder.WebHost.UseUrls($"http://*:{port}");
             }
- 
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
 
@@ -105,7 +113,7 @@ namespace MenuDigitalApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseCors("AllowAll");
             app.MapGet("/", () => Results.Ok("✅ MenuDigital API Running"));
             app.MapControllers();
 
