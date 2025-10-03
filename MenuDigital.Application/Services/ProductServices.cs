@@ -47,34 +47,17 @@ namespace MenuDigital.Application.Services
                 throw new ArgumentException("Product name is required.", nameof(product));
 
             await _repo.AddAsync(product, ct);
-
-            var menu = await _menu.GetByIdAsync(product.MenuId);
-            if (menu == null)
-                throw new Exception("Menu não encontrado");
-            if(menu.ProductIds.Count > 0 && menu.ProductIds != null)
-            {
-                // 3. adiciona o ProductId no menu
-                if (!menu.ProductIds.Contains(product.ProductId))
-                {
-                    menu.ProductIds.Add(product.ProductId);
-                    await _menu.UpdateAsync(menu);
-                    await _uow.SaveChangesAsync(ct);
-
-                }
-            }
-            List<Guid> prodIds = new List<Guid> { product.ProductId};
-            menu.ProductIds = prodIds;
-            await _menu.UpdateAsync(menu);
             await _uow.SaveChangesAsync(ct);
-
         }
 
         // UPDATE (idempotente: retorna false se não existe)
         public async Task<bool> UpdateAsync(ProductModel product, CancellationToken ct = default)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
+            if (string.IsNullOrWhiteSpace(product.ProductId.ToString()))
+                throw new ArgumentException("Product Id is required.", nameof(product));
 
-            var existing = await _repo.GetByIdAsync(product.ProductId, ct);
+            var existing = await _repo.GetByIdAsync(Guid.Parse(product.ProductId.ToString()), ct);
             if (existing is null) return false;
 
             // exemplo de campos atualizáveis (ajuste conforme sua regra)

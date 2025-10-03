@@ -8,7 +8,7 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Request.Create
         public string Name { get; set; } = default!;
 
         public List<CategoryCreateDto>? Category { get; set; } = new List<CategoryCreateDto>();
-        public Guid MenuId { get; set; }
+        public Guid ProductId { get; set; }
 
         public string? Description { get; set; }
 

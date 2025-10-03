@@ -18,6 +18,7 @@ namespace MenuDigitalApi.DTOs.Transformers.Store
                 HasImage = dto.HasImage,
                 Images = dto.Images,
                 ImageUrl = dto.ImageUrl,
+                StoreUrl = dto.StoreUrl,
                 MinOrderPrice = dto.MinOrderPrice,
                 SocialMedias = dto.SocialMedias,
                 StoreName = dto.StoreName,

@@ -17,6 +17,8 @@ namespace MenuDigitalApi.DTOs.Store
 
             if (!string.IsNullOrEmpty(dto.ImageUrl))
                 entity.ImageUrl = dto.ImageUrl;
+            if (!string.IsNullOrEmpty(dto.StoreUrl))
+                entity.StoreUrl = dto.StoreUrl;
 
             if (!string.IsNullOrEmpty(dto.Alert))
                 entity.Alert = dto.Alert;

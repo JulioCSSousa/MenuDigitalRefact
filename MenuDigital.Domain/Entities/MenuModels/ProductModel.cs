@@ -9,9 +9,9 @@ namespace MenuDigital.Domain.Entities
         [Key]
         public Guid ProductId { get; set; } = default!;
 
-        [ForeignKey("MenuId")]
-        [Required(ErrorMessage = "You cannot create a Product without a Menu")]
-        public Guid MenuId { get; set; } 
+        [ForeignKey("StoreId")]
+        [Required(ErrorMessage = "You cannot create a Product without a Store")]
+        public Guid StoreId { get; set; } 
 
         [MaxLength(100)]
         [Required]

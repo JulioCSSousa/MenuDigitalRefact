@@ -16,6 +16,8 @@ namespace MenuDigitalApi.DTOs.Store
         public string? Description { get; set; }
         [MaxLength(500)]
         public string? ImageUrl { get; set; }
+        [Required(ErrorMessage = "Url is Required")]
+        public string StoreUrl { get; set; }
         public bool HasImage { get; set; }
         public bool Closed { get; set; }
         public Colors? Colors { get; set; }

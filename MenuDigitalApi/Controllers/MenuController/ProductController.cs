@@ -80,7 +80,7 @@ namespace MenuDigitalApi.Controllers.MenuController
 
             var dbProduct = new ProductModel
             {
-                MenuId = product.MenuId,
+                ProductId = product.ProductId,
                 Category = category,
                 Name = product.Name,
                 CombinedPrice = product.CombinedPrice,

@@ -13,23 +13,28 @@ public class ProductRepository : IProductRepository
         var sid = id;
         return await _context.Products
             .AsNoTracking()
-            .Include(p => p.CombinedProducts)                // se precisar
+            .Include(p => p.CombinedProducts)
+            .Include(c => c.Category)
             .FirstOrDefaultAsync(p => p.ProductId == sid, ct);
     }
 
-    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid menuId, CancellationToken ct = default)
+    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid ProductId, CancellationToken ct = default)
     {
-        var sid = menuId;
+        var sid = ProductId;
         return await _context.Products
             .AsNoTracking()
             .Where(p => p.ProductId == sid)
+            .Include(p => p.CombinedProducts)
+            .Include(c => c.Category)
+
             .ToListAsync(ct);
     }
 
     public async Task<ICollection<ProductModel>> GetAllAsync(CancellationToken ct = default)
     {
         return await _context.Products
-        .Include(p => p.CombinedProducts)          // traz os combinados
+        .Include(p => p.CombinedProducts)
+        .Include(c => c.Category)
         .AsNoTracking()
         .ToListAsync(ct);
     }
@@ -37,7 +42,6 @@ public class ProductRepository : IProductRepository
     public async Task AddAsync(ProductModel product, CancellationToken ct = default)
     {
         await _context.Products.AddAsync(product, ct);
-        // SaveChanges fica no Service/UnitOfWork
     }
 
     public Task UpdateAsync(ProductModel product, CancellationToken ct = default)
