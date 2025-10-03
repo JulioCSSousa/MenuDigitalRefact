@@ -10,16 +10,16 @@ public class ProductRepository : IProductRepository
 
     public async Task<ProductModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var sid = id.ToString();
+        var sid = id;
         return await _context.Products
             .AsNoTracking()
             .Include(p => p.CombinedProducts)                // se precisar
-            .FirstOrDefaultAsync(p => p.ProductId.ToString() == sid, ct);
+            .FirstOrDefaultAsync(p => p.ProductId == sid, ct);
     }
 
     public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid menuId, CancellationToken ct = default)
     {
-        var sid = menuId.ToString();
+        var sid = menuId;
         return await _context.Products
             .AsNoTracking()
             .Where(p => p.MenuId == sid)

@@ -16,7 +16,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD");
         var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 
-        var cs = $"Server={dbHost};Port={dbPort};Database={dbName};User={dbUser};Password={dbPass};";
+        var cs = $"Server=localhost;Database=menudigitaldb;User=root;Password=4306";
 
         optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs),
             b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
