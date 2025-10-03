@@ -22,7 +22,7 @@ public class ProductRepository : IProductRepository
         var sid = menuId;
         return await _context.Products
             .AsNoTracking()
-            .Where(p => p.MenuId == sid)
+            .Where(p => p.ProductId == sid)
             .ToListAsync(ct);
     }
 
