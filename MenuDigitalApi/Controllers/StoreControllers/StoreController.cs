@@ -22,10 +22,6 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         public async Task<ActionResult<ICollection<StoreModel>>> GetAll(CancellationToken ct)
         {
             var result = await _service.GetAllAsync(ct);
-            if (result == null)
-            {
-                return NotFound();
-            }
             return result.ToList();
         }
 
@@ -33,28 +29,24 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
         {
-            var Store = await _service.GetByIdAsync(id, ct);
-            return Store is null ? NotFound() : Ok(Store);
+            var store = await _service.GetByIdAsync(id, ct);
+            return Ok(store);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StoreCreateDto Store, CancellationToken ct)
+        public async Task<IActionResult> Create(StoreCreateDto StoreDto, CancellationToken ct)
         {
-            var dbStore = StoreCreateTransform.ToDbModel(Store);
+            var dbStore = StoreCreateTransform.ToDbModel(StoreDto);
             if(dbStore == null)
             {
                 return BadRequest("Transform Failed and returned null");
             }
             await _service.AddAsync(dbStore, ct);
-            foreach (var item in dbStore.WorkSchedule)
-            {
-                Console.WriteLine(item);
-            }
             return Ok(dbStore);
             
         }
 
-        [HttpPost("{storeId}/schedule")]
+        [HttpPost("{storeId}/address")]
 
         public async Task<ActionResult> AddAddress(AddressModel addressModel, Guid storeId, CancellationToken ct = default)
         {
@@ -69,7 +61,29 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             return Ok("Address successfully saved");
 
         }
+       /* [HttpPost("{storeId}/workschedule")]
 
+        public async Task<ActionResult> AddWorkSchedule(WorkScheduleCreate work, Guid storeId, CancellationToken ct = default)
+        {
+            var workschedule = new WorkSchedule
+            {
+                Day = work.Day,
+                Start = TimeSpan.Parse(work.Start),
+                End = TimeSpan.Parse(work.End),
+                IsSelected = work.IsSelected
+
+            };
+            try
+            {
+                await _service.AddWorkScheduleAsync(workschedule, storeId);
+            }
+            catch (NullReferenceException ex)
+            {
+                return NotFound(ex);
+            }
+            return Ok("WorkSchedule successfully saved");
+
+        }*/
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, StoreUpdateDto storeDto, CancellationToken ct)
@@ -88,7 +102,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
         {
-            await _service.DeleteAsync(id, ct);
+            await _service.DeleteAsync(id, ct); 
             return Ok("Successfully Deleted");
         }
     }

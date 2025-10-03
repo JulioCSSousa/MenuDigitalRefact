@@ -22,8 +22,10 @@ namespace MenuDigital.Application.Services
         public Task<ICollection<StoreModel>> GetAllAsync(CancellationToken ct = default)
             => _repo.GetAllAsync(ct);
 
-        public Task<StoreModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
-            => _repo.GetByIdAsync(id, ct);
+        public async Task<StoreModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            return await _repo.GetByIdAsync(id, ct);
+        }
 
         // CREATE
         public async Task AddAsync(StoreModel s, CancellationToken ct = default)

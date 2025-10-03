@@ -27,8 +27,8 @@ namespace MenuDigitalApi.DTOs.Transformers.Store
                     {
                         Day = item.Day,
                         IsSelected = item.IsSelected,
-                        Start = item.Start,
-                        End = item.End
+                        Start = TimeSpan.Parse(item.Start),
+                        End = TimeSpan.Parse(item.End)
                     })
                     .ToList() ?? new List<WorkSchedule>(),
 

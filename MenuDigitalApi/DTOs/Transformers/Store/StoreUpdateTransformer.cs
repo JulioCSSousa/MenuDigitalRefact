@@ -62,8 +62,8 @@ namespace MenuDigitalApi.DTOs.Store
                     .Select(ws => new WorkSchedule
                     {
                         IsSelected = true,
-                        Start = ws.Start,
-                        End = ws.End,
+                        Start = TimeSpan.Parse(ws.Start),
+                        End = TimeSpan.Parse(ws.End),
                         Day = ws.Day,
                     }).ToList();
             }
