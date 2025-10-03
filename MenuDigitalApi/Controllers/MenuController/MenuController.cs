@@ -1,4 +1,5 @@
 ﻿using MenuDigital.Application.DTOs.Menu;
+using MenuDigital.Application.Interfaces;
 using MenuDigital.Application.Services;
 using MenuDigital.Domain.Entities.MenuModels;
 using MenuDigitalApi.DTOs.Menu;
@@ -11,9 +12,11 @@ namespace MenuDigitalApi.Controllers.MenuController
     public class MenuController : Controller
     {
         private readonly MenuService _menuService;
-        public MenuController(MenuService menuService) 
+        private readonly IUnitOfWork _uow;
+        public MenuController(MenuService menuService, IUnitOfWork uow) 
         {
-            _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService)); ;
+            _menuService = menuService ?? throw new ArgumentNullException(nameof(menuService));
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         }
 
         [HttpPost]
@@ -27,17 +30,36 @@ namespace MenuDigitalApi.Controllers.MenuController
                 MenuName = menu.MenuName
             };
             await _menuService.AddAsync(dbMenu, ct);
+            await _uow.SaveChangesAsync();
         }
-        [HttpDelete]
-        public async Task DeleteAsync(MenuModel menu, CancellationToken ct = default)
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(Guid id, CancellationToken ct = default)
         {
-            await _menuService.DeleteAsync(menu, ct);
+            var result = await _menuService.GetByIdAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            await _menuService.DeleteAsync(result, ct);
+            return Ok("Successfully Deleted");
         }
 
         [HttpGet]
-        public async Task<ICollection<MenuModel>> GetAllAsync(CancellationToken ct = default)
+        public async Task<ICollection<MenuGetDto>> GetAllAsync(CancellationToken ct = default)
         {
-            return await _menuService.GetAllAsync(ct);  
+            var dbModel = await _menuService.GetAllAsync(ct);
+            var dto = dbModel.Select(menu => new MenuGetDto
+            {
+                MenuId = menu.MenuId,
+                Active = menu.Active,
+                Index = menu.Index,
+                MenuName = menu.MenuName,
+                StoreId = menu.StoreId,
+                ProductIds = menu.ProductIds
+            }
+            ).ToList();
+            return dto;
         }
 
         [HttpGet("{id}")]
@@ -53,7 +75,7 @@ namespace MenuDigitalApi.Controllers.MenuController
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAsync(Guid id, MenuUpdate menu, CancellationToken ct = default)
+        public async Task<ActionResult> UpdateAsync(Guid id, Update menu, CancellationToken ct = default)
         {
             var dbMenu = await GetByIdAsync(id);
             if(dbMenu != null)
@@ -64,7 +86,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             {
                 MenuId = dbMenu.MenuId,
                 StoreId = dbMenu.StoreId,
-                Products = dbMenu.Products,
+                ProductIds = dbMenu.ProductIds,
                 MenuName = menu.MenuName,
                 Active = menu.Active,
                 Index = menu.index,
@@ -72,6 +94,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             };
 
             _menuService.UpdateAsync(menuUpdate, ct);
+            await _uow.SaveChangesAsync();
             return Ok(menuUpdate);
         }
     }

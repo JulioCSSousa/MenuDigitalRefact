@@ -13,6 +13,7 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu
         [ForeignKey("StoreId")]
         [Required(ErrorMessage = "You cannot create a Menu without a Store")]
         public string StoreId { get; set; }
+        public Guid MenuId { get; set; }
 
         [MaxLength(100)]
         [Required]

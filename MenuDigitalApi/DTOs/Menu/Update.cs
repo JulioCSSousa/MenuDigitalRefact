@@ -1,6 +1,6 @@
 ﻿namespace MenuDigitalApi.DTOs.Menu
 {
-    public class MenuUpdate
+    public class Update
     {
         public string? MenuName { get; set; }
         public bool Active { get; set; }

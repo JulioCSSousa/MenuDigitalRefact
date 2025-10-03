@@ -64,6 +64,7 @@ namespace MenuDigitalApi.DTOs.Transformers.Product
                 var productDto = new ProductGetAllReponseDto
                 {
                     ProductId = dbProduct.ProductId,
+                    MenuId = dbProduct.MenuId,
                     Name = dbProduct.Name,
                     Description = dbProduct.Description,
                     Category = categoryList,

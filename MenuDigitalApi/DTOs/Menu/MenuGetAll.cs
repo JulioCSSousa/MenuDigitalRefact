@@ -1,21 +1,16 @@
-﻿using System;
+﻿using MenuDigital.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MenuDigital.Domain.Entities.MenuModels
+namespace MenuDigitalApi.DTOs.Menu
 {
-    public class MenuModel
+    public class MenuGetDto
     {
-        [Key]
         public Guid MenuId { get; set; }
         public int Index { get; set; }
-        [ForeignKey("StoreId")]
-        [Required]
         public Guid StoreId { get; set; }
-        [Required]
         public string? MenuName { get; set; }
-        [Required]
         public bool Active { get; set; }
-        public List<Guid>? ProductIds { get; set; } = new();
+        public List<Guid> ProductIds { get; set; }
     }
 }
