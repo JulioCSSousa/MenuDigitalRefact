@@ -10,7 +10,7 @@ namespace MenuDigital.Domain.Entities
         [Key]
         public Guid StoreId { get; set; }
         [MaxLength(100)]
-        [Required]
+        [Required(ErrorMessage = "Store Name is Required")]
         public string? StoreName { get; set; }
         public List<Category>? Category { get; set; }
         [MaxLength(500)]

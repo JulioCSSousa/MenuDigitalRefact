@@ -19,8 +19,22 @@ namespace MenuDigital.Application.Services
         }
 
         // READ
-        public Task<ICollection<StoreModel>> GetAllAsync(CancellationToken ct = default)
-            => _repo.GetAllAsync(ct);
+        public async Task<ICollection<StoreModel>> GetAllAsync(string? name, string? url, CancellationToken ct = default)
+        {
+            var result = await _repo.GetAllAsync(ct);
+
+            var query = result.AsEnumerable();
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                query = query.Where(n => n.StoreName.ToLower().Contains(name.ToLower()));
+            }
+            if (!String.IsNullOrEmpty(url))
+            {
+                query = query.Where(u => u.StoreUrl.ToLower().Contains(url.ToLower()));
+            }
+            return query.ToList();
+        }
 
         public async Task<StoreModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {

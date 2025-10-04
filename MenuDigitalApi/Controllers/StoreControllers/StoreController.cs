@@ -19,9 +19,9 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<StoreModel>>> GetAll(CancellationToken ct)
+        public async Task<ActionResult<ICollection<StoreModel>>> GetAll(string? name, string? url, CancellationToken ct)
         {
-            var result = await _service.GetAllAsync(ct);
+            var result = await _service.GetAllAsync(name, url, ct);
             return result.ToList();
         }
 
