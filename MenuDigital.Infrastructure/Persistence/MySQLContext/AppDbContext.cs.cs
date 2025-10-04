@@ -19,6 +19,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<AddressModel> Addresses => Set<AddressModel>();
     public DbSet<StorePayments> StorePayments => Set<StorePayments>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<OrderList> OrderList => Set<OrderList>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

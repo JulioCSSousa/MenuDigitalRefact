@@ -9,6 +9,7 @@ using MenuDigital.Domain.Models.Entities;
 using MenuDigital.Infrastructure.Context.Repositories;
 using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using MenuDigital.Infrastructure.Repositories;
+using MenuDigital.Infrastructure.Repositories.MenuRepository;
 using MenuDigital.Infrastructure.Repositories.StoreRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -57,12 +58,14 @@ namespace MenuDigitalApi
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
             builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             // Services de aplicação
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<StoreService>();
             builder.Services.AddScoped<IWorkScheduleService, WorkScheduleService>();
             builder.Services.AddScoped<StorePaymentService>();
             builder.Services.AddScoped<MenuService>();
+            builder.Services.AddScoped<OrderService>();
 
 
             builder.Services.AddIdentity<User, IdentityRole>(options =>

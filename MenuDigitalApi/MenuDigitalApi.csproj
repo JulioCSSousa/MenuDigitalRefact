@@ -9,10 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\Menu\Products\Response\OrderResponse\OrderedProductsDto.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="appsettings - Cópia.Development.json" />
   </ItemGroup>
 
@@ -30,10 +26,6 @@
     <ProjectReference Include="..\MenuDigital.Domain\MenuDigital.Domain.csproj" />
     <ProjectReference Include="..\MenuDigital.Infrastructure\MenuDigital.Infrastructure.csproj" />
     <ProjectReference Include="..\MenuDigital.Shared\MenuDigital.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="DTOs\Menu\Products\Response\OrderResponse\OrderedProductsDto.cs" />
   </ItemGroup>
 
 </Project>
