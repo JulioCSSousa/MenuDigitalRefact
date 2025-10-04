@@ -18,16 +18,14 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(p => p.ProductId == sid, ct);
     }
 
-    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid ProductId, CancellationToken ct = default)
+    public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default)
     {
-        var sid = ProductId;
+        var sid = storeId;
         return await _context.Products
             .AsNoTracking()
-            .Where(p => p.ProductId == sid)
+            .Where(p => p.StoreId == sid)
             .Include(p => p.CombinedProducts)
-            .ThenInclude(p => p.Prices)
             .Include(c => c.Category)
-
             .ToListAsync(ct);
     }
 

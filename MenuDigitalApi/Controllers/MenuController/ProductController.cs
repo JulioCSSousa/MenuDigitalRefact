@@ -42,7 +42,12 @@ namespace MenuDigitalApi.Controllers.MenuController
             var product = await _productService.GetByIdAsync(id, ct);
             return Ok(product);
         }
-
+        [HttpGet("store;{id}")]
+        public async Task<ActionResult> GetByStoreId(Guid id, CancellationToken ct)
+        {
+            var product = await _productService.GetByStoreAsync(id, ct);
+            return Ok(product);
+        }
         [HttpPost]
         public async Task<IActionResult> Create(ProductMenuCreate product, CancellationToken ct)
         {

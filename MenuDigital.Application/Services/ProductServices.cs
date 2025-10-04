@@ -9,7 +9,6 @@ namespace MenuDigital.Application.Services
     public class ProductService
     {
         private readonly IProductRepository _repo;
-        private readonly IMenuRepository _menu;
         private readonly IUnitOfWork _uow;
 
         public ProductService() { }
@@ -17,7 +16,6 @@ namespace MenuDigital.Application.Services
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _menu = menu;
         }
 
         // READ

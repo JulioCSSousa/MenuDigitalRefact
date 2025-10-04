@@ -20,7 +20,6 @@ public class StoreRepository : IStoreRepository
             .Include(s => s.Category)
             .Include(s => s.WorkSchedule)
             .Include(s => s.Address)
-            .Include(s => s.StorePayments)
             .FirstOrDefaultAsync(p => p.StoreId == id, ct);
     }
 
