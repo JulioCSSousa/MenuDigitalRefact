@@ -17,7 +17,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             _service = service;
         }
         [HttpPost]
-        public async Task Create(OrderListCreateDto dto, CancellationToken ct)
+        public async Task<ActionResult> Create(OrderListCreateDto dto, CancellationToken ct)
         {
             var dbModel = new OrderList
             {
@@ -31,6 +31,7 @@ namespace MenuDigitalApi.Controllers.MenuController
                 ProductIds = dto.ProductIds
             };
             await _service.Create(dbModel, ct);
+            return Ok(dbModel.OrderId);
 
         }
         [HttpDelete]

@@ -42,7 +42,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
                 return BadRequest("Transform Failed and returned null");
             }
             await _service.AddAsync(dbStore, ct);
-            return Ok(dbStore);
+            return Ok(dbStore.StoreId);
             
         }
 
@@ -58,7 +58,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             {
                 return NotFound(ex);
             }
-            return Ok("Address successfully saved");
+            return NoContent();
 
         }
        /* [HttpPost("{storeId}/workschedule")]
@@ -96,14 +96,14 @@ namespace MenuDigitalApi.Controllers.StoreControllers
 
             StoreUpdateTransformer.ApplyUpdate(storeDb, storeDto);
             await _service.UpdateAsync(id, storeDb, ct);
-            return Ok("Successfully Saved");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
         {
-            await _service.DeleteAsync(id, ct); 
-            return Ok("Successfully Deleted");
+            await _service.DeleteAsync(id, ct);
+            return NoContent();
         }
     }
 

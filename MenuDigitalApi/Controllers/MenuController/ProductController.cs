@@ -48,7 +48,7 @@ namespace MenuDigitalApi.Controllers.MenuController
         {
             var dbProduct = ProductTransformer.Create(product, ct);
             await _productService.CreateAsync(dbProduct, ct);
-            return Ok("Successfully Created");
+            return Ok(dbProduct.ProductId);
         }
 
         [HttpPut("{id}")]
@@ -62,14 +62,14 @@ namespace MenuDigitalApi.Controllers.MenuController
 
             var updated = ProductTransformer.ProductUpdateDto(productDto, dbProduct);
             await _productService.UpdateAsync(updated);
-            return Ok("Successflly Updated");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
         {
             await _productService.DeleteAsync(id, ct);
-            return Ok("Successflly Deleted");
+            return NoContent();
         }
     }
 }

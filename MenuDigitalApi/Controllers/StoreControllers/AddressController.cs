@@ -68,7 +68,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
                 };
 
                 await _context.SaveChangesAsync();
-                return Ok(updateAddress);
+                return NoContent();
             }
             return NotFound(dbAddress);
         }
@@ -83,7 +83,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             }
              _context.Remove(dbAddress);
             await _context.SaveChangesAsync();
-            return Ok(dbAddress);
+            return NoContent();
         }
     }
 }
