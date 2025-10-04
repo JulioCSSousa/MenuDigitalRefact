@@ -12,6 +12,7 @@ namespace MenuDigital.Application.Services
         private readonly IMenuRepository _menu;
         private readonly IUnitOfWork _uow;
 
+        public ProductService() { }
         public ProductService(IProductRepository repo, IUnitOfWork uow, IMenuRepository menu)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
@@ -20,27 +21,27 @@ namespace MenuDigital.Application.Services
         }
 
         // READ
-        public async Task<ICollection<ProductModel>> GetAllAsync(CancellationToken ct = default)
+        public virtual async Task<ICollection<ProductModel>> GetAllAsync(CancellationToken ct = default)
         {
             return await _repo.GetAllAsync(ct);
         }
             
 
-        public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default)
+        public virtual async Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default)
         {
             return await _repo.GetByStoreAsync(storeId, ct);
 
         }
            
 
-        public async Task<ProductModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public virtual async Task<ProductModel?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             return await _repo.GetByIdAsync(id, ct);
         }
 
 
         // CREATE
-        public async Task CreateAsync(ProductModel product, CancellationToken ct = default)
+        public virtual async Task CreateAsync(ProductModel product, CancellationToken ct = default)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
             if (string.IsNullOrWhiteSpace(product.Name))
@@ -51,7 +52,7 @@ namespace MenuDigital.Application.Services
         }
 
         // UPDATE (idempotente: retorna false se não existe)
-        public async Task<bool> UpdateAsync(ProductModel product, CancellationToken ct = default)
+        public virtual async Task<bool> UpdateAsync(ProductModel product, CancellationToken ct = default)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
             if (string.IsNullOrWhiteSpace(product.ProductId.ToString()))
@@ -83,7 +84,7 @@ namespace MenuDigital.Application.Services
         }
 
         // DELETE por Id (conveniente)
-        public async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
+        public virtual async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var existing = await _repo.GetByIdAsync(id, ct);
             if (existing is null) return false;

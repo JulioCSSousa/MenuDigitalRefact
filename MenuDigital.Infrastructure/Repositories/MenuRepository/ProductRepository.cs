@@ -25,6 +25,7 @@ public class ProductRepository : IProductRepository
             .AsNoTracking()
             .Where(p => p.ProductId == sid)
             .Include(p => p.CombinedProducts)
+            .ThenInclude(p => p.Prices)
             .Include(c => c.Category)
 
             .ToListAsync(ct);
