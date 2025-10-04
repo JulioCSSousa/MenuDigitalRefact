@@ -1,6 +1,7 @@
 ﻿using MenuDigital.Application.Interfaces;
 using MenuDigital.Application.Interfaces.Menu;
 using MenuDigital.Domain.Entities;
+using MenuDigital.Domain.Entities.ValuesObjects.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,31 +38,25 @@ namespace MenuDigital.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OrderList>> GetAll(string? status, string? paymentForm, string? deliveryForm, CancellationToken ct)
+        public async Task<IEnumerable<OrderList>> GetAll(
+    string? status, string? paymentForm, string? deliveryForm, CancellationToken ct)
         {
             var result = await _repository.GetAll(ct);
 
-            var filteredResult = new List<OrderList>();
-            if (!String.IsNullOrEmpty(status) && !String.IsNullOrEmpty(paymentForm) && !String.IsNullOrEmpty(deliveryForm))
-                filteredResult = result.Select(o => o).Where(s => s.Status.ToString() == status)
-                    .Where(p => p.PaymentForm.ToString() == paymentForm)
-                    .Where(d => d.DeliveryForm.ToString() == deliveryForm).ToList();
+            var query = result.AsEnumerable();
 
-            else if (!String.IsNullOrEmpty(status) && !String.IsNullOrEmpty(paymentForm))
-            {
-                filteredResult = result.Select(o => o).Where(s => s.Status.ToString() == status)
-                    .Where(p => p.PaymentForm.ToString() == paymentForm).ToList();
-            }
-            else if (!String.IsNullOrEmpty(status))
-            {
-                filteredResult = result.Select(o => o).Where(s => s.Status.ToString() == status).ToList();
-            }
-            else
-            {
-                filteredResult = result.ToList();
-            }
-            return filteredResult;
+            if (Enum.TryParse<OrderStatus>(status, true, out var parsedStatus))
+                query = query.Where(o => o.Status == parsedStatus);
+
+            if (Enum.TryParse<PaymentForm>(paymentForm, true, out var parsedPayment))
+                query = query.Where(o => o.PaymentForm == parsedPayment);
+
+            if (Enum.TryParse<DeliveryForm>(deliveryForm, true, out var parsedDelivery))
+                query = query.Where(o => o.DeliveryForm == parsedDelivery);
+
+            return query.ToList();
         }
+
 
         public async Task<OrderList> GetById(long id, CancellationToken ct)
         {
