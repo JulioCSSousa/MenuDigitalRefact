@@ -20,10 +20,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<ICollection<ProductModel>> GetByStoreAsync(Guid storeId, CancellationToken ct = default)
     {
-        var sid = storeId;
+
         return await _context.Products
             .AsNoTracking()
-            .Where(p => p.StoreId == sid)
+            .Where(p => p.StoreId == storeId)
             .Include(p => p.CombinedProducts)
             .Include(c => c.Category)
             .ToListAsync(ct);

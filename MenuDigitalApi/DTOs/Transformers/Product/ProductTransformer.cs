@@ -77,6 +77,7 @@ namespace MenuDigitalApi.DTOs.Transformers.Product
             return new ProductModel
             {
                 Name = productDto.Name ?? dbProduct.Name,
+                StoreId = dbProduct.StoreId,
                 Category = productDto.Category ?? dbProduct.Category,
                 CombinedPrice = productDto.CombinedPrice ?? dbProduct.CombinedPrice,
                 CombinedProducts = combinedProductDtoList,
@@ -127,7 +128,7 @@ namespace MenuDigitalApi.DTOs.Transformers.Product
 
             var dbProduct = new ProductModel
             {
-                ProductId = product.StoreId,
+                StoreId = product.StoreId,
                 Category = category,
                 Name = product.Name,
                 CombinedPrice = product.CombinedPrice,
