@@ -13,9 +13,11 @@ public class AddressModel
     [MaxLength(20)]
     public string? Number { get; set; }
     [MaxLength(100)]
-    public string? neighborhood { get; set; }
+    public string? Neighborhood { get; set; }
     [MaxLength(100)]
     public string? City { get; set; }
+    [MaxLength(100)]
+    public string? State { get; set; }
     [MaxLength(100)]
     public string? Complement { get; set; }
 

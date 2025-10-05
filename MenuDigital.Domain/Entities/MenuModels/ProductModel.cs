@@ -9,57 +9,32 @@ namespace MenuDigital.Domain.Entities
         [Key]
         public Guid ProductId { get; set; } = default!;
 
-        [ForeignKey("StoreId")]
         [Required(ErrorMessage = "You cannot create a Product without a Store")]
-        public Guid StoreId { get; set; } 
+        public Guid? StoreId { get; set; } 
 
         [MaxLength(100)]
         [Required]
         public string Name { get; set; } = default!;
 
         [MaxLength(100)]
-        public List<Category>? Category { get; set; } =  new List<Category>();
+        public string? Category { get; set; }
 
         [MaxLength(500)]
         public string? Description { get; set; }
 
-        public bool IsSale { get; set; }
+        public DateOnly? InactivedDate { get; set; }
 
         [MaxLength(300)]
         public string? ImgUrl { get; set; }
 
-        public int? ExtraIndex { get; set; }
-
         [MaxLength(300)]
-        public List<string> Observations { get; set; } = new();
+        public string Observations { get; set; }
 
-        public List<Price> Prices { get; set; } = new();
+        public decimal Price { get; set; } = 0;
 
-        public List<PreviewPrice> PreviewPrices { get; set; } = new();
-        public bool CombinedPrice { get; set; }
+        public decimal PreviewPrice { get; set; }
 
-        public bool Multiple { get; set; }
-
-        public List<CombinedProduct>? CombinedProducts { get; set; } = new();
+        public List<Additional>? Additional { get; set; } = new();
     }
-
-    [NotMapped]
-    public class Price
-    {
-        [MaxLength(100)]
-        public string Label { get; set; } = default!;
-
-        public decimal Value { get; set; } = 0;
-    }
-    [NotMapped]
-    public class PreviewPrice
-    {
-        [MaxLength(100)]
-        public string Label { get; set; } = default!;
-
-        public decimal Value { get; set; }
-    }
-
-
 
 }

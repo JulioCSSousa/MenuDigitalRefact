@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MenuDigitalApi.Controllers.MenuController
 {
-    [ApiController]
+    /*[ApiController]
     [Route("api/[controller]")]
     public class MenuController : Controller
     {
@@ -96,6 +96,5 @@ namespace MenuDigitalApi.Controllers.MenuController
             _menuService.UpdateAsync(menuUpdate, ct);
             await _uow.SaveChangesAsync();
             return Ok(menuUpdate);
-        }
-    }
+    */
 }

@@ -46,8 +46,8 @@ namespace MenuDigital.Api.Tests.Controllers
             // Assert
             var okResult = result.Result as OkObjectResult;
             okResult.Should().NotBeNull();
-            okResult!.Value.Should().BeOfType<List<ProductGetAllReponseDto>>();
-            ((List<ProductGetAllReponseDto>)okResult.Value!).Should().HaveCount(2);
+            okResult!.Value.Should().BeOfType<List<ProductGetAllDto>>();
+            ((List<ProductGetAllDto>)okResult.Value!).Should().HaveCount(2);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace MenuDigital.Api.Tests.Controllers
             public async Task Create_ShouldReturnOk_WithSuccessMessage()
         {
             // Arrange
-            var createDto = new ProductMenuCreate
+            var createDto = new ProductCreate
             {
                 Name = "Pizza",
                 Description = "Delicious"
@@ -115,7 +115,7 @@ namespace MenuDigital.Api.Tests.Controllers
             // Arrange
             var id = Guid.NewGuid();
             var dbProduct = new ProductModel { ProductId = id, Name = "Old Pizza" };
-            var updateDto = new ProductMenuRequestUpdateDto { Name = "New Pizza" };
+            var updateDto = new ProductUpdateDto { Name = "New Pizza" };
 
             _serviceMock.Setup(s => s.GetByIdAsync(id, It.IsAny<CancellationToken>()))
                         .ReturnsAsync(dbProduct);
@@ -142,7 +142,7 @@ namespace MenuDigital.Api.Tests.Controllers
                         .ReturnsAsync((ProductModel?)null);
 
             // Act
-            var result = await _controller.Update(id, new ProductMenuRequestUpdateDto(), CancellationToken.None);
+            var result = await _controller.Update(id, new ProductUpdateDto(), CancellationToken.None);
 
             // Assert
             var notFound = result as NotFoundObjectResult;

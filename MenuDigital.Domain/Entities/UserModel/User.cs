@@ -6,15 +6,18 @@ namespace MenuDigital.Domain.Models.Entities
     public class User : IdentityUser
     {
         [Required]
-        public string Name { get; protected set; }
+        public string Name { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        protected User() { }
+        public User() { }
         
         public User(string name, string email, string phoneNumber)
         {
             Name = name;
             Email = email;
             PhoneNumber = phoneNumber;
+
         }
 
         public void SetName(string name)

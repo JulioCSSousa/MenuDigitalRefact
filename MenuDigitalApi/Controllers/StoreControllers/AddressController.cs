@@ -61,7 +61,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
                 {
                     Street = string.IsNullOrEmpty(model.Street) ? dbAddress.Value.Street : model.Street,
                     Number = string.IsNullOrEmpty(model.Number) ? dbAddress.Value.Number : model.Number,
-                    neighborhood = string.IsNullOrEmpty(model.neighborhood) ? dbAddress.Value.neighborhood : model.neighborhood,
+                    Neighborhood = string.IsNullOrEmpty(model.Neighborhood) ? dbAddress.Value.Neighborhood : model.Neighborhood,
                     City = string.IsNullOrEmpty(model.City) ? dbAddress.Value.City : model.City,
                     Complement = string.IsNullOrEmpty(model.Complement) ? dbAddress.Value.Complement : model.Complement,
                     ZipCode = string.IsNullOrEmpty(model.ZipCode) ? dbAddress.Value.ZipCode : model.ZipCode,

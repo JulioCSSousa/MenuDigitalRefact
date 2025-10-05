@@ -10,11 +10,7 @@ namespace MenuDigital.Domain.Entities
         public long CategoryId { get; set; }
         [MaxLength(100)]
         public string? Name { get; set; }
-        [MaxLength(500)]
-        public string? Description { get; set; }
-        [NotMapped]
-        public List<Colors> Colors { get; set; }
-
+        public string? Icon { get; set; }
     }
 
 }

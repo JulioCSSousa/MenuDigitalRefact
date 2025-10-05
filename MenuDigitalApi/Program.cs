@@ -11,8 +11,13 @@ using MenuDigital.Infrastructure.Persistence.MySQLContext;
 using MenuDigital.Infrastructure.Repositories;
 using MenuDigital.Infrastructure.Repositories.MenuRepository;
 using MenuDigital.Infrastructure.Repositories.StoreRepository;
+using MenuDigital.Infrastructure.Seed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using WebAPI.Services;
 
 
 namespace MenuDigitalApi
@@ -40,7 +45,7 @@ namespace MenuDigitalApi
             }
             else
             {
-                cs = builder.Configuration.GetConnectionString("DefaultConnection");
+                cs = $"Server=localhost;Database=menudigitaldb;User=root;Password=4306";
             }
 
             builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -49,9 +54,37 @@ namespace MenuDigitalApi
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new() { Title = "MenuDigital API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Description = "Insira o token JWT no formato: Bearer {seu token}"
+                });
+
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+                {
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+
+
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IStoreRepository, StoreRepository>();
             builder.Services.AddScoped<IStorePaymentRepository, StorePaymentRepository>();
@@ -66,8 +99,11 @@ namespace MenuDigitalApi
             builder.Services.AddScoped<StorePaymentService>();
             builder.Services.AddScoped<MenuService>();
             builder.Services.AddScoped<OrderService>();
+            builder.Services.AddScoped<TokenService>();
 
 
+            var jwtKey = builder.Configuration["Jwt:Key"];
+            var jwtIssuer = builder.Configuration["Jwt:Issuer"];
             builder.Services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -80,12 +116,29 @@ namespace MenuDigitalApi
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-            builder.Services.AddAuthentication("CookieAuth")
-                .AddCookie("CookieAuth", options =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.LoginPath = "/Account/Login";
-                    options.AccessDeniedPath = "/Account/AccessDenied";
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtIssuer,
+                    ValidAudience = jwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+            builder.Services.AddAuthorization();
 
             if (builder.Environment.IsProduction())
             {
@@ -104,6 +157,14 @@ namespace MenuDigitalApi
             });
 
             var app = builder.Build();
+            if (!builder.Environment.IsProduction())
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    await SeedOInitizalization.SeedAsync(context);
+                }
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -114,8 +175,10 @@ namespace MenuDigitalApi
 
             app.UseRouting();
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
+
             app.UseCors("AllowAll");
             app.MapGet("/", () => Results.Ok("✅ MenuDigital API Running"));
             app.MapControllers();

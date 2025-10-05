@@ -1,5 +1,6 @@
 ﻿
 using MenuDigital.Domain.Entities.ValuesObjects;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,19 +16,13 @@ namespace MenuDigital.Domain.Entities
         public List<Category>? Category { get; set; }
         [MaxLength(500)]
         public string? Description { get; set; }
-        [MaxLength(500)]
-        public string? ImageUrl { get; set; }
         [Required(ErrorMessage = "Url is Required")]
         public string StoreUrl { get; set; }
         public bool HasImage { get; set; }
         public bool Closed { get; set; }
-        [NotMapped]
         public Colors? Colors { get; set; }
-        [NotMapped]
         public Images? Images { get; set; }
-        [NotMapped]
-        public SocialMedia? SocialMedias { get; set; }
-        [NotMapped]
+        public List<SocialMedia>? SocialMedias { get; set; } = new();
         public Contact? Contacts { get; set; }
         public List<AddressModel>? Address { get; set; } 
         public List<WorkSchedule>? WorkSchedule { get; set; }
@@ -37,26 +32,23 @@ namespace MenuDigital.Domain.Entities
 
     }
 
-    [NotMapped]
+    [Owned]
     public class SocialMedia
     {
-        public List<string> Facebook { get; set; } = new();
-        public List<string> Instagram { get; set; } = new();
-        public List<string> Whatsapp { get; set; } = new();
-        public List<string> X { get; set; } = new();
-        public List<string> Website { get; set; } = new();
+        public string? Name { get; set; }
+        public string? Url { get; set; }
 
     }
 
-    [NotMapped]
+    [Owned]
     public class Contact
     {
-        public List<string>? Phones { get; set; } = new List<string>();
-        public List<string>? Whatsapps { get; set; } = new List<string>();
-        public List<string>? Emails { get; set; } = new List<string>();
+        public string[]? Phones { get; set; }
+        public string[]? Whatsapps { get; set; }
+        public string[]? Emails { get; set; }
 
     }
-    [NotMapped]
+    [Owned]
     public class Images
     {
         [MaxLength(500)]

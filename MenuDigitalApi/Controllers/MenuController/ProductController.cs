@@ -1,12 +1,10 @@
 
 using MenuDigital.Application.Services;
-using MenuDigital.Domain.Entities;
-using MenuDigital.Domain.Entities.MenuModels;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Update;
 using MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu;
-using MenuDigitalApi.DTOs.Transformers.Product;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Create;
 using Microsoft.AspNetCore.Mvc;
+using MenuDigitalApi.DTOs.Transformers;
 
 namespace MenuDigitalApi.Controllers.MenuController
 {
@@ -22,10 +20,10 @@ namespace MenuDigitalApi.Controllers.MenuController
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<ProductGetAllReponseDto>>> GetAll(CancellationToken ct)
+        public async Task<ActionResult<ICollection<ProductGetAllDto>>> GetAll(CancellationToken ct)
         {
             var result = await _productService.GetAllAsync(ct);
-            var productDto = new List<ProductGetAllReponseDto>();
+            var productDto = new List<ProductGetAllDto>();
 
             foreach (var item in result)
             {
@@ -49,7 +47,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             return Ok(product);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(ProductMenuCreate product, CancellationToken ct)
+        public async Task<IActionResult> Create(ProductCreate product, CancellationToken ct)
         {
             var dbProduct = ProductTransformer.Create(product, ct);
             await _productService.CreateAsync(dbProduct, ct);
@@ -57,7 +55,7 @@ namespace MenuDigitalApi.Controllers.MenuController
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Guid id, ProductMenuRequestUpdateDto productDto, CancellationToken ct)
+        public async Task<ActionResult> Update(Guid id, ProductUpdateDto productDto, CancellationToken ct)
         {
             var dbProduct = await _productService.GetByIdAsync(id);
             if (dbProduct == null)

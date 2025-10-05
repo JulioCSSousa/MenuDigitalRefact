@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Entities\CategoryModels\Category.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="MongoDB.Bson" Version="3.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\CategoryModels\" />
   </ItemGroup>
 
 </Project>

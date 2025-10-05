@@ -52,30 +52,7 @@ namespace MenuDigital.Application.Services
         // UPDATE (idempotente: retorna false se não existe)
         public virtual async Task<bool> UpdateAsync(ProductModel product, CancellationToken ct = default)
         {
-            if (product is null) throw new ArgumentNullException(nameof(product));
-            if (string.IsNullOrWhiteSpace(product.ProductId.ToString()))
-                throw new ArgumentException("Product Id is required.", nameof(product));
-
-            var existing = await _repo.GetByIdAsync(Guid.Parse(product.ProductId.ToString()), ct);
-            if (existing is null) return false;
-
-            // exemplo de campos atualizáveis (ajuste conforme sua regra)
-            existing.Name = product.Name ?? existing.Name;
-            existing.Description = product.Description ?? existing.Description;
-            existing.ImgUrl = product.ImgUrl ?? existing.ImgUrl;
-            existing.IsSale = product.IsSale;
-            existing.ExtraIndex = product.ExtraIndex;
-
-            // preços / preview precios / combined: substitui por completo
-            if (product.Prices?.Any() == true)
-                existing.Prices = product.Prices;
-            if (product.PreviewPrices?.Any() == true)
-                existing.PreviewPrices = product.PreviewPrices;
-            if (product.CombinedProducts?.Any() == true)
-                existing.CombinedProducts = product.CombinedProducts;
-
-
-            await _repo.UpdateAsync(existing, ct);
+            await _repo.UpdateAsync(product, ct);
             await _uow.SaveChangesAsync(ct);
 
             return true;

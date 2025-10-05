@@ -2,6 +2,7 @@
 using MenuDigital.Application.Services;
 using MenuDigital.Domain.Entities;
 using MenuDigitalApi.DTOs.Store;
+using MenuDigitalApi.DTOs.Transformers;
 using MenuDigitalApi.DTOs.Transformers.Store;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,10 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         public async Task<ActionResult<ICollection<StoreModel>>> GetAll(string? name, string? url, CancellationToken ct)
         {
             var result = await _service.GetAllAsync(name, url, ct);
+            if(result == null)
+            {
+                return NotFound("Store not Found");
+            }
             return result.ToList();
         }
 
@@ -36,7 +41,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         [HttpPost]
         public async Task<IActionResult> Create(StoreCreateDto StoreDto, CancellationToken ct)
         {
-            var dbStore = StoreCreateTransform.ToDbModel(StoreDto);
+            var dbStore = StoreTransform.Create(StoreDto);
             if(dbStore == null)
             {
                 return BadRequest("Transform Failed and returned null");
@@ -94,8 +99,8 @@ namespace MenuDigitalApi.Controllers.StoreControllers
                 return BadRequest("Store not found");
             }
 
-            StoreUpdateTransformer.ApplyUpdate(storeDb, storeDto);
-            await _service.UpdateAsync(id, storeDb, ct);
+            StoreTransform.Update(storeDb, storeDto);
+            await _service.UpdateAsync(storeDb, ct);
             return NoContent();
         }
 

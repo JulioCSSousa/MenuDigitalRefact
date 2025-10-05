@@ -14,8 +14,6 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Response.OrderResponse
         public string? Type { get; set; }
         public string Name { get; set; }
         public string? Size { get; set; }
-
-        [NotMapped]
-        public List<Price> Prices { get; set; } = new();
+        public decimal Price { get; set; } = new();
     }
 }

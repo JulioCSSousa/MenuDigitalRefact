@@ -20,7 +20,7 @@ namespace MenuDigitalApi.DTOs.Store
         public bool? Closed { get; set; }
         public Colors? Colors { get; set; }
         public Images? Images { get; set; }
-        public SocialMedia? SocialMedias { get; set; }
+        public List<SocialMedia>? SocialMedias { get; set; }
         public Contact? Contacts { get; set; }
         public List<AddressModel>? Address { get; set; }
         public List<WorkScheduleCreate>? WorkSchedule { get; set; }
