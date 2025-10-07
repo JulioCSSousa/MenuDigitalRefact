@@ -37,6 +37,10 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
         {
             var store = await _service.GetByIdAsync(id, ct);
+            if(store == null)
+            {
+                return NotFound();
+            }
             return Ok(store);
         }
 
@@ -46,7 +50,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             var dbStore = StoreTransform.Create(StoreDto);
             if(dbStore == null)
             {
-                return BadRequest("Transform Failed and returned null");
+                return NotFound("Store was not found in database");
             }
             await _service.AddAsync(dbStore, ct);
             return Ok(dbStore.StoreId);
@@ -98,7 +102,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
             var storeDb = await _service.GetByIdAsync(id);
             if(storeDb == null)
             {
-                return BadRequest("Store not found");
+                return NotFound("Store not found");
             }
 
             StoreTransform.Update(storeDb, storeDto);

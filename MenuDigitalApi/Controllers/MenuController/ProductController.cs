@@ -38,6 +38,10 @@ namespace MenuDigitalApi.Controllers.MenuController
         public async Task<ActionResult> GetById(Guid id, CancellationToken ct)
         {
             var product = await _productService.GetByIdAsync(id, ct);
+            if (product == null)
+            {
+                return NotFound();
+            }
             return Ok(product);
         }
         [HttpGet("Store/{id}")]
