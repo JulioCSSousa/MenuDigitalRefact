@@ -35,12 +35,17 @@ public class AppDbContext : IdentityDbContext<User>
             sm.Property(x => x.Url).HasColumnName("SocialMedia_Url");
             sm.ToTable("StoreSocialMedias");
         });
-
-        modelBuilder.Entity<StorePayments>()
+        modelBuilder.Entity<WorkSchedule>()
         .HasOne<StoreModel>()
-        .WithMany(s => s.StorePayments)
-        .HasForeignKey("StoreId") 
+        .WithMany(s => s.WorkSchedule)
+        .HasForeignKey("StoreId")
         .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<StorePayments>()
+            .HasOne<StoreModel>()
+            .WithMany(s => s.StorePayments)
+            .HasForeignKey("StoreId") 
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<AddressModel>()
             .HasOne(a => a.Store)
@@ -67,6 +72,14 @@ public class AppDbContext : IdentityDbContext<User>
         .HasForeignKey(a => a.ProductId)
         .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<StoreModel>()
+        .OwnsMany(s => s.SocialMedias, sm =>
+        {
+            sm.WithOwner().HasForeignKey("StoreId"); 
+            sm.Property(x => x.Name).HasColumnName("SocialMedia_Name");
+            sm.Property(x => x.Url).HasColumnName("SocialMedia_Url");
+            sm.ToTable("StoreSocialMedias");
+        });
 
         base.OnModelCreating(modelBuilder);
 
