@@ -1,6 +1,7 @@
 ﻿// Application/Services/ProductService.cs
 using MenuDigital.Application.Interfaces;
 using MenuDigital.Application.Interfaces.Menu;
+using MenuDigital.Application.Interfaces.Store;
 using MenuDigital.Domain.Entities;
 
 
@@ -10,12 +11,13 @@ namespace MenuDigital.Application.Services
     {
         private readonly IProductRepository _repo;
         private readonly IUnitOfWork _uow;
-
+        private readonly IStoreRepository _storeRepo;
         public ProductService() { }
-        public ProductService(IProductRepository repo, IUnitOfWork uow, IMenuRepository menu)
+        public ProductService(IProductRepository repo, IUnitOfWork uow, IMenuRepository menu, IStoreRepository storeRepo)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _storeRepo = storeRepo;
         }
 
         // READ
@@ -42,11 +44,18 @@ namespace MenuDigital.Application.Services
         public virtual async Task CreateAsync(ProductModel product, CancellationToken ct = default)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
-            if (string.IsNullOrWhiteSpace(product.Name))
-                throw new ArgumentException("Product name is required.", nameof(product));
 
-            await _repo.AddAsync(product, ct);
-            await _uow.SaveChangesAsync(ct);
+            var storeId = product.StoreId;
+            var storeExists = await _storeRepo.GetByIdAsync(storeId);
+            if (storeExists != null)
+            {
+                await _repo.AddAsync(product, ct);
+                await _uow.SaveChangesAsync(ct);
+            }
+            else
+            {
+                throw new InvalidOperationException("Store id not found");
+            }
         }
 
         // UPDATE (idempotente: retorna false se não existe)

@@ -14,7 +14,7 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Request.Update
         public string? Category { get; set; } 
         [MaxLength(500)]
         public string? Description { get; set; }
-
+        public bool? IsActived { get; set; } = true;
         public DateOnly? InactivedDate { get; set; }
 
         [MaxLength(300)]

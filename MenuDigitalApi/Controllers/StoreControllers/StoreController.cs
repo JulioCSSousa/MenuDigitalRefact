@@ -20,14 +20,16 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ICollection<StoreModel>>> GetAll(string? name, string? url, CancellationToken ct)
+        public async Task<ActionResult<ICollection<StoreGetAllDto>>> GetAll(string? name, string? url, CancellationToken ct)
         {
             var result = await _service.GetAllAsync(name, url, ct);
-            if(result == null)
+            var toDto = new List<StoreGetAllDto>();
+            foreach (var item in result)
             {
-                return NotFound("Store not Found");
+                var model = StoreTransform.GetAll(item);
+                toDto.Add(model);
             }
-            return result.ToList();
+            return toDto.ToList();
         }
 
 

@@ -24,11 +24,12 @@ namespace MenuDigital.Domain.Entities
         public Images? Images { get; set; }
         public List<SocialMedia>? SocialMedias { get; set; } = new();
         public Contact? Contacts { get; set; }
-        public List<AddressModel>? Address { get; set; } 
+        public List<AddressModel>? Address { get; set; } = new();
         public List<WorkSchedule>? WorkSchedule { get; set; }
         public List<StorePayments>? StorePayments { get; set; }
         public string? Alert { get; set; }
         public double? MinOrderPrice { get; set; }
+        public List<ProductModel> Products { get; set; } = new();
 
     }
 

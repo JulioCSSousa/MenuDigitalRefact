@@ -27,7 +27,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AddressModel>> GetAddressById(Guid id)
+        public async Task<ActionResult<AddressModel>> GetAddressById(long id)
         {
             var dbAddress = _context.Addresses.FirstOrDefault(i => i.AddressId == id);
             if (dbAddress == null)
@@ -52,7 +52,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
 
         }
         [HttpPut]
-        public async Task<ActionResult<AddressModel>> UpdateAddresses(Guid id, AddressModel model)
+        public async Task<ActionResult<AddressModel>> UpdateAddresses(long id, AddressModel model)
         {
             var dbAddress = await GetAddressById(id);
             if (dbAddress != null)
@@ -74,7 +74,7 @@ namespace MenuDigitalApi.Controllers.StoreControllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> Delete(long id)
         {
             var dbAddress = await GetAddressById(id);
             if(dbAddress == null)

@@ -72,7 +72,6 @@ namespace MenuDigital.Infrastructure.Seed
                 {
                     new AddressModel
                     {
-                        AddressId = Guid.NewGuid(),
                         ZipCode = "13338-000",
                         Street = "Rua das Pizzas",
                         Number = "123",
@@ -122,7 +121,6 @@ namespace MenuDigital.Infrastructure.Seed
                 {
                     new AddressModel
                     {
-                        AddressId = Guid.NewGuid(),
                         ZipCode = "13338-000",
                         Street = "Rua das Pizzas",
                         Number = "123",

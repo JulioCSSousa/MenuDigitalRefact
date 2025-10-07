@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MenuDigital.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class foreignfix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,6 +42,9 @@ namespace MenuDigital.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -72,30 +75,45 @@ namespace MenuDigital.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Menu",
                 columns: table => new
                 {
-                    ProductId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    StoreId = table.Column<string>(type: "longtext", nullable: false)
+                    MenuId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    StoreId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    MenuName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Category = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsSale = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    ImgUrl = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ExtraIndex = table.Column<int>(type: "int", nullable: true),
-                    Observations = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CombinedPrice = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Multiple = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Active = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    ProductIds = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.PrimaryKey("PK_Menu", x => x.MenuId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "OrderList",
+                columns: table => new
+                {
+                    OrderId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StoreId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DeliveryForm = table.Column<int>(type: "int", nullable: false),
+                    PaymentForm = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    OrderedAt = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    FinishedAt = table.Column<TimeSpan>(type: "time(6)", nullable: true),
+                    ProductIds = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderList", x => x.OrderId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -106,11 +124,9 @@ namespace MenuDigital.Infrastructure.Migrations
                     StoreId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     StoreName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Category = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ImageUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                    StoreUrl = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     HasImage = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Closed = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -122,24 +138,12 @@ namespace MenuDigital.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Images_Header = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    SocialMedias_Facebook = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SocialMedias_Instagram = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SocialMedias_Whatsapp = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SocialMedias_X = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    SocialMedias_Website = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Contacts_Phones = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contacts_Whatsapps = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Contacts_Emails = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    AddressId = table.Column<long>(type: "bigint", nullable: true),
-                    PaymentForm = table.Column<int>(type: "int", nullable: false),
                     Alert = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     MinOrderPrice = table.Column<double>(type: "double", nullable: true)
@@ -278,77 +282,133 @@ namespace MenuDigital.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CombinedProducts",
+                name: "Addresses",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Type = table.Column<string>(type: "longtext", nullable: true)
+                    AddressId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ZipCode = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Category = table.Column<string>(type: "longtext", nullable: true)
+                    Street = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MainMenu = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    ProductId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Number = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Size = table.Column<string>(type: "longtext", nullable: true)
+                    Neighborhood = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Min = table.Column<int>(type: "int", nullable: false),
-                    Max = table.Column<int>(type: "int", nullable: false),
-                    ProductModelProductId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    City = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    State = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Complement = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StoreModelStoreId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CombinedProducts", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
                     table.ForeignKey(
-                        name: "FK_CombinedProducts_Products_ProductModelProductId",
-                        column: x => x.ProductModelProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId");
+                        name: "FK_Addresses_StoreModels_StoreModelStoreId",
+                        column: x => x.StoreModelStoreId,
+                        principalTable: "StoreModels",
+                        principalColumn: "StoreId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PreviewPrice",
+                name: "Categories",
                 columns: table => new
                 {
-                    ProductModelProductId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Label = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Value = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Icon = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StoreModelStoreId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PreviewPrice", x => new { x.ProductModelProductId, x.Id });
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
                     table.ForeignKey(
-                        name: "FK_PreviewPrice_Products_ProductModelProductId",
-                        column: x => x.ProductModelProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
+                        name: "FK_Categories_StoreModels_StoreModelStoreId",
+                        column: x => x.StoreModelStoreId,
+                        principalTable: "StoreModels",
+                        principalColumn: "StoreId");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    ProductId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    StoreId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Category = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    InactivedDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    ImgUrl = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Observations = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    PreviewPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.ForeignKey(
+                        name: "FK_Products_StoreModels_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "StoreModels",
+                        principalColumn: "StoreId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Price",
+                name: "StorePayments",
                 columns: table => new
                 {
-                    ProductModelProductId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Label = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Value = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    PaymentsCount = table.Column<int>(type: "int", nullable: true),
+                    StoreId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Price", x => new { x.ProductModelProductId, x.Id });
+                    table.PrimaryKey("PK_StorePayments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Price_Products_ProductModelProductId",
-                        column: x => x.ProductModelProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
+                        name: "FK_StorePayments_StoreModels_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "StoreModels",
+                        principalColumn: "StoreId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "StoreSocialMedias",
+                columns: table => new
+                {
+                    StoreModelStoreId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SocialMedia_Name = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SocialMedia_Url = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreSocialMedias", x => new { x.StoreModelStoreId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_StoreSocialMedias_StoreModels_StoreModelStoreId",
+                        column: x => x.StoreModelStoreId,
+                        principalTable: "StoreModels",
+                        principalColumn: "StoreId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -375,6 +435,45 @@ namespace MenuDigital.Infrastructure.Migrations
                         principalColumn: "StoreId");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Additionals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Category = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Size = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Min = table.Column<int>(type: "int", nullable: false),
+                    Max = table.Column<int>(type: "int", nullable: false),
+                    ProductIdList = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductModelProductId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Additionals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Additionals_Products_ProductModelProductId",
+                        column: x => x.ProductModelProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Additionals_ProductModelProductId",
+                table: "Additionals",
+                column: "ProductModelProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_StoreModelStoreId",
+                table: "Addresses",
+                column: "StoreModelStoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -414,9 +513,19 @@ namespace MenuDigital.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CombinedProducts_ProductModelProductId",
-                table: "CombinedProducts",
-                column: "ProductModelProductId");
+                name: "IX_Categories_StoreModelStoreId",
+                table: "Categories",
+                column: "StoreModelStoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_StoreId",
+                table: "Products",
+                column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StorePayments_StoreId",
+                table: "StorePayments",
+                column: "StoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkSchedules_StoreModelStoreId",
@@ -427,6 +536,12 @@ namespace MenuDigital.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Additionals");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -443,25 +558,31 @@ namespace MenuDigital.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CombinedProducts");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "PreviewPrice");
+                name: "Menu");
 
             migrationBuilder.DropTable(
-                name: "Price");
+                name: "OrderList");
+
+            migrationBuilder.DropTable(
+                name: "StorePayments");
+
+            migrationBuilder.DropTable(
+                name: "StoreSocialMedias");
 
             migrationBuilder.DropTable(
                 name: "WorkSchedules");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "StoreModels");

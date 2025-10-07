@@ -6,6 +6,70 @@ namespace MenuDigitalApi.DTOs.Transformers.Store
 {
     public static class StoreTransform
     {
+        public static StoreGetAllDto GetAll(StoreModel dto)
+        {
+            return new StoreGetAllDto
+            {
+                StoreId = dto.StoreId,
+                Alert = dto.Alert,
+                Closed = dto.Closed,
+                Colors = dto.Colors,
+                Contacts = dto.Contacts,
+                Description = dto.Description,
+                HasImage = dto.HasImage,
+                Images = dto.Images,
+                StoreUrl = dto.StoreUrl,
+                MinOrderPrice = dto.MinOrderPrice,
+                SocialMedias = dto.SocialMedias,
+                StoreName = dto.StoreName,
+
+                WorkSchedule = dto.WorkSchedule?
+                    .Select(item => new WorkScheduleGetDto
+                    {
+                        Id = item.Id,
+                        Day = item.Day,
+                        IsSelected = item.IsSelected,
+                        Start = item.Start.ToString(),
+                        End = item.End.ToString(),
+                    })
+                    .ToList() ?? new List<WorkScheduleGetDto>(),
+
+
+                Address = dto.Address?
+                    .Select(item => new AddressGetDto
+                    {
+                        AddressId = item.AddressId,
+                        Street = item.Street,
+                        Neighborhood = item.Neighborhood,
+                        City = item.City,
+                        State = item.State,
+                        Complement = item.Complement,
+                        Number = item.Number,
+                        ZipCode = item.ZipCode
+
+                    })
+                    .ToList() ?? new List<AddressGetDto>(),
+
+                Category = dto.Category?
+                    .Select(item => new CategoryGetAll
+                    {
+                        CategoryId = item.CategoryId,
+                        Name = item.Name,
+                        Icon = item.Icon
+                    })
+                    .ToList() ?? new List<CategoryGetAll>(),
+
+                StorePayments = dto.StorePayments?
+                    .Select(item => new StorePayments
+                    {
+                        Id= item.Id,
+                        PaymentsCount = item.PaymentsCount,
+                        StoreId = item.StoreId, 
+                    })
+                    .ToList() ?? new List<StorePayments>()
+            };
+        }
+
         public static StoreModel Create(StoreCreateDto dto)
         {
             return new StoreModel
@@ -43,6 +107,7 @@ namespace MenuDigitalApi.DTOs.Transformers.Store
                         Complement = item.Complement,
                         Number = item.Number,
                         ZipCode = item.ZipCode
+
                     })
                     .ToList() ?? new List<AddressModel>(),
 

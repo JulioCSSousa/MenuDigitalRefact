@@ -7,7 +7,6 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu
 {
     public class ProductGetAllDto
     {
-        [Key]
         public Guid ProductId { get; set; } = default!;
 
         [ForeignKey("StoreId")]
@@ -18,12 +17,11 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu
         [Required]
         public string Name { get; set; } = default!;
 
-        [MaxLength(100)]
         public string? Category { get; set; }
 
         [MaxLength(500)]
         public string? Description { get; set; }
-
+        public bool? IsActived { get; set; } = true;
         public DateOnly? InactivedDate { get; set; }
 
         [MaxLength(300)]

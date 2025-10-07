@@ -35,7 +35,42 @@ public class AppDbContext : IdentityDbContext<User>
             sm.Property(x => x.Url).HasColumnName("SocialMedia_Url");
             sm.ToTable("StoreSocialMedias");
         });
+
+        modelBuilder.Entity<StorePayments>()
+        .HasOne<StoreModel>()
+        .WithMany(s => s.StorePayments)
+        .HasForeignKey("StoreId") 
+        .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<AddressModel>()
+            .HasOne(a => a.Store)
+            .WithMany(s => s.Address)
+            .HasForeignKey(a => a.StoreId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        modelBuilder.Entity<ProductModel>()
+       .HasOne<StoreModel>()
+       .WithMany(s => s.Products)
+       .HasForeignKey("StoreId")
+       .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductModel>()
+       .HasMany<Additional>()
+       .WithOne(s => s.Product)
+       .HasForeignKey("ProductId")
+       .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Additional>()
+        .HasOne(a => a.Product)
+        .WithMany(p => p.Additional)
+        .HasForeignKey(a => a.ProductId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+
         base.OnModelCreating(modelBuilder);
+
+        
     }
 
 }

@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using WebAPI.Services;
 
 
@@ -52,7 +53,13 @@ namespace MenuDigitalApi
     opt.UseMySql(cs, serverVersion,
         b => b.MigrationsAssembly("MenuDigital.Infrastructure")));
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -157,14 +164,6 @@ namespace MenuDigitalApi
             });
 
             var app = builder.Build();
-            if (!builder.Environment.IsProduction())
-            {
-                using (var scope = app.Services.CreateScope())
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    await SeedOInitizalization.SeedAsync(context);
-                }
-            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

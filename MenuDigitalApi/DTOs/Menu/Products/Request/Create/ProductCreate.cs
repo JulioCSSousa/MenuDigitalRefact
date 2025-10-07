@@ -12,8 +12,9 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Request.Create
         public Guid StoreId { get; set; }
 
         public string? Description { get; set; }
+        public bool? IsInactive { get; set; }
 
-        public DateOnly InactivedDate { get; set; }
+        public string InactivedDate { get; set; }
 
         public string? ImgUrl { get; set; }
 

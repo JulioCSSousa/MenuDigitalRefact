@@ -50,8 +50,16 @@ namespace MenuDigitalApi.Controllers.MenuController
         public async Task<IActionResult> Create(ProductCreate product, CancellationToken ct)
         {
             var dbProduct = ProductTransformer.Create(product, ct);
-            await _productService.CreateAsync(dbProduct, ct);
-            return Ok(dbProduct.ProductId);
+            try
+            {
+                await _productService.CreateAsync(dbProduct, ct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(dbProduct.ProductId); ;
         }
 
         [HttpPut("{id}")]

@@ -10,7 +10,8 @@ namespace MenuDigital.Domain.Entities
         public Guid ProductId { get; set; } = default!;
 
         [Required(ErrorMessage = "You cannot create a Product without a Store")]
-        public Guid? StoreId { get; set; } 
+        [ForeignKey("StoreId")]
+        public Guid StoreId { get; set; }
 
         [MaxLength(100)]
         [Required]
@@ -22,6 +23,7 @@ namespace MenuDigital.Domain.Entities
         [MaxLength(500)]
         public string? Description { get; set; }
 
+        public bool? IsActived { get; set; } = true;
         public DateOnly? InactivedDate { get; set; }
 
         [MaxLength(300)]

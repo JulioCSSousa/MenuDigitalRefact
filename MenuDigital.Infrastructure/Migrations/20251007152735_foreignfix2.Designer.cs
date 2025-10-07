@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuDigital.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251001153918_Six")]
-    partial class Six
+    [Migration("20251007152735_foreignfix2")]
+    partial class foreignfix2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,22 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("Neighborhood")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<string>("Number")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<Guid?>("StoreModelStoreId")
+                    b.Property<string>("State")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("StoreId1")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Street")
@@ -51,13 +62,11 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("neighborhood")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
                     b.HasKey("AddressId");
 
-                    b.HasIndex("StoreModelStoreId");
+                    b.HasIndex("StoreId");
+
+                    b.HasIndex("StoreId1");
 
                     b.ToTable("Addresses");
                 });
@@ -68,30 +77,24 @@ namespace MenuDigital.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                    b.Property<string>("Icon")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
-
-                    b.Property<Guid?>("ProductModelProductId")
-                        .HasColumnType("char(36)");
 
                     b.Property<Guid?>("StoreModelStoreId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("CategoryId");
 
-                    b.HasIndex("ProductModelProductId");
-
                     b.HasIndex("StoreModelStoreId");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.CombinedProduct", b =>
+            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.Additional", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,9 +102,6 @@ namespace MenuDigital.Infrastructure.Migrations
 
                     b.Property<string>("Category")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("MainMenu")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Max")
                         .HasColumnType("int");
@@ -116,20 +116,22 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("ProductIdList")
+                        .HasColumnType("longtext");
+
                     b.Property<Guid?>("ProductModelProductId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Size")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("ProductModelProductId");
 
-                    b.ToTable("CombinedProducts");
+                    b.ToTable("Additionals");
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.MenuModel", b =>
@@ -145,6 +147,10 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MenuName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProductIds")
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("StoreId")
@@ -155,38 +161,62 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.ToTable("Menu");
                 });
 
+            modelBuilder.Entity("MenuDigital.Domain.Entities.OrderList", b =>
+                {
+                    b.Property<long>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("DeliveryForm")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan?>("FinishedAt")
+                        .HasColumnType("time(6)");
+
+                    b.Property<TimeSpan>("OrderedAt")
+                        .HasColumnType("time(6)");
+
+                    b.Property<int>("PaymentForm")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductIds")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoreId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("OrderList");
+                });
+
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>
                 {
                     b.Property<Guid>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("CombinedPrice")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Category")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<int?>("ExtraIndex")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImgUrl")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
-                    b.Property<bool>("IsSale")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("MenuId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("MenuModelMenuId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Multiple")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<DateOnly?>("InactivedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -198,9 +228,18 @@ namespace MenuDigital.Infrastructure.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<decimal>("PreviewPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("ProductId");
 
-                    b.HasIndex("MenuModelMenuId");
+                    b.HasIndex("StoreId");
 
                     b.ToTable("Products");
                 });
@@ -224,10 +263,6 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.Property<bool>("HasImage")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
                     b.Property<double?>("MinOrderPrice")
                         .HasColumnType("double");
 
@@ -235,6 +270,10 @@ namespace MenuDigital.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<string>("StoreUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("StoreId");
 
@@ -250,12 +289,12 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.Property<int?>("PaymentsCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("StoreModelStoreId")
+                    b.Property<Guid>("StoreId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StoreModelStoreId");
+                    b.HasIndex("StoreId");
 
                     b.ToTable("StorePayments");
                 });
@@ -333,6 +372,12 @@ namespace MenuDigital.Infrastructure.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
@@ -488,86 +533,47 @@ namespace MenuDigital.Infrastructure.Migrations
                 {
                     b.HasOne("MenuDigital.Domain.Entities.StoreModel", null)
                         .WithMany("Address")
-                        .HasForeignKey("StoreModelStoreId");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MenuDigital.Domain.Entities.StoreModel", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("MenuDigital.Domain.Entities.ProductModel", null)
-                        .WithMany("Category")
-                        .HasForeignKey("ProductModelProductId");
-
                     b.HasOne("MenuDigital.Domain.Entities.StoreModel", null)
                         .WithMany("Category")
                         .HasForeignKey("StoreModelStoreId");
                 });
 
-            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.CombinedProduct", b =>
+            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.Additional", b =>
                 {
+                    b.HasOne("MenuDigital.Domain.Entities.ProductModel", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("MenuDigital.Domain.Entities.ProductModel", null)
-                        .WithMany("CombinedProducts")
+                        .WithMany("Additional")
                         .HasForeignKey("ProductModelProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>
                 {
-                    b.HasOne("MenuDigital.Domain.Entities.MenuModels.MenuModel", null)
+                    b.HasOne("MenuDigital.Domain.Entities.StoreModel", null)
                         .WithMany("Products")
-                        .HasForeignKey("MenuModelMenuId");
-
-                    b.OwnsMany("MenuDigital.Domain.Entities.PreviewPrice", "PreviewPrices", b1 =>
-                        {
-                            b1.Property<Guid>("ProductModelProductId")
-                                .HasColumnType("char(36)");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Label")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("varchar(100)");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("decimal(65,30)");
-
-                            b1.HasKey("ProductModelProductId", "Id");
-
-                            b1.ToTable("PreviewPrice");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductModelProductId");
-                        });
-
-                    b.OwnsMany("MenuDigital.Domain.Entities.Price", "Prices", b1 =>
-                        {
-                            b1.Property<Guid>("ProductModelProductId")
-                                .HasColumnType("char(36)");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Label")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("varchar(100)");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("decimal(65,30)");
-
-                            b1.HasKey("ProductModelProductId", "Id");
-
-                            b1.ToTable("Price");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductModelProductId");
-                        });
-
-                    b.Navigation("PreviewPrices");
-
-                    b.Navigation("Prices");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.StoreModel", b =>
@@ -615,34 +621,26 @@ namespace MenuDigital.Infrastructure.Migrations
                                 .HasForeignKey("StoreModelStoreId");
                         });
 
-                    b.OwnsOne("MenuDigital.Domain.Entities.SocialMedia", "SocialMedias", b1 =>
+                    b.OwnsMany("MenuDigital.Domain.Entities.SocialMedia", "SocialMedias", b1 =>
                         {
                             b1.Property<Guid>("StoreModelStoreId")
                                 .HasColumnType("char(36)");
 
-                            b1.Property<string>("Facebook")
-                                .IsRequired()
-                                .HasColumnType("longtext");
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
 
-                            b1.Property<string>("Instagram")
-                                .IsRequired()
-                                .HasColumnType("longtext");
+                            b1.Property<string>("Name")
+                                .HasColumnType("longtext")
+                                .HasColumnName("SocialMedia_Name");
 
-                            b1.Property<string>("Website")
-                                .IsRequired()
-                                .HasColumnType("longtext");
+                            b1.Property<string>("Url")
+                                .HasColumnType("longtext")
+                                .HasColumnName("SocialMedia_Url");
 
-                            b1.Property<string>("Whatsapp")
-                                .IsRequired()
-                                .HasColumnType("longtext");
+                            b1.HasKey("StoreModelStoreId", "Id");
 
-                            b1.Property<string>("X")
-                                .IsRequired()
-                                .HasColumnType("longtext");
-
-                            b1.HasKey("StoreModelStoreId");
-
-                            b1.ToTable("StoreModels");
+                            b1.ToTable("StoreSocialMedias", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("StoreModelStoreId");
@@ -682,7 +680,9 @@ namespace MenuDigital.Infrastructure.Migrations
                 {
                     b.HasOne("MenuDigital.Domain.Entities.StoreModel", null)
                         .WithMany("StorePayments")
-                        .HasForeignKey("StoreModelStoreId");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.WorkSchedule", b =>
@@ -743,16 +743,9 @@ namespace MenuDigital.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MenuDigital.Domain.Entities.MenuModels.MenuModel", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("MenuDigital.Domain.Entities.ProductModel", b =>
                 {
-                    b.Navigation("Category");
-
-                    b.Navigation("CombinedProducts");
+                    b.Navigation("Additional");
                 });
 
             modelBuilder.Entity("MenuDigital.Domain.Entities.StoreModel", b =>
@@ -760,6 +753,8 @@ namespace MenuDigital.Infrastructure.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("Category");
+
+                    b.Navigation("Products");
 
                     b.Navigation("StorePayments");
 

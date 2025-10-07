@@ -18,6 +18,7 @@ namespace MenuDigital.Domain.Entities.MenuModels
         public int Min { get; set; } = 0;
 
         public int Max { get; set; } = 0;
+        public ProductModel Product { get; set; }
         public string[]? ProductIdList { get; set; }
 
     }
