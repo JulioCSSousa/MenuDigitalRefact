@@ -5,6 +5,7 @@ using MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Create;
 using Microsoft.AspNetCore.Mvc;
 using MenuDigitalApi.DTOs.Transformers;
+using MenuDigital.Domain.Entities.MenuModels;
 
 namespace MenuDigitalApi.Controllers.MenuController
 {
@@ -75,8 +76,12 @@ namespace MenuDigitalApi.Controllers.MenuController
                 return NotFound("Product not found");
             }
 
-            var updated = ProductTransformer.ProductUpdateDto(productDto, dbProduct);
-            await _productService.UpdateAsync(updated);
+            bool result = ProductTransformer.ProductUpdateDto(dbProduct, productDto);
+            if (!result)
+            {
+                return BadRequest("Confirm the Additional Ids");
+            }
+            await _productService.UpdateAsync(dbProduct);
             return NoContent();
         }
 
@@ -86,6 +91,8 @@ namespace MenuDigitalApi.Controllers.MenuController
             await _productService.DeleteAsync(id, ct);
             return NoContent();
         }
+
+        
     }
 }
 

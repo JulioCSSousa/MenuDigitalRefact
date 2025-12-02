@@ -30,7 +30,7 @@ namespace MenuDigital.Domain.Entities
         public string? ImgUrl { get; set; }
 
         [MaxLength(300)]
-        public string Observations { get; set; }
+        public string Observations { get; set; } = String.Empty!;
 
         public decimal Price { get; set; } = 0;
 

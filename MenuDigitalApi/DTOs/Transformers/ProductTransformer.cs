@@ -3,6 +3,7 @@ using MenuDigital.Domain.Entities.MenuModels;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Create;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Update;
 using MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu;
+using SharpCompress.Common;
 
 namespace MenuDigitalApi.DTOs.Transformers
 {
@@ -34,7 +35,7 @@ namespace MenuDigitalApi.DTOs.Transformers
                 Category = dbProduct.Category,
                 Price = dbProduct.Price,
                 Additional = additional,
-                ImgUrl = dbProduct.ImgUrl, 
+                ImgUrl = dbProduct.ImgUrl,
                 IsActived = dbProduct.IsActived,
                 InactivedDate = dbProduct.InactivedDate,
                 Observations = dbProduct.Observations,
@@ -42,46 +43,60 @@ namespace MenuDigitalApi.DTOs.Transformers
             };
         }
 
-        public static ProductModel ProductUpdateDto(ProductUpdateDto productDto, ProductModel dbProduct)
+        public static bool ProductUpdateDto(this ProductModel dbProduct, ProductUpdateDto productDto)
         {
-            var additionalDtoList = productDto.Additional?.Any() == true
-                ? productDto.Additional.Select(item =>
-                    new Additional
-                    {
-                        Id = dbProduct.Additional?.FirstOrDefault()?.Id ?? Guid.NewGuid(),
-                        Name = item.Name ?? dbProduct.Additional.FirstOrDefault()?.Name,
-                        Size = item.Size ?? dbProduct.Additional.FirstOrDefault()?.Size,
-                        Category = item.Category ?? dbProduct.Additional.FirstOrDefault()?.Category,
-                        Max = item.Max ?? dbProduct.Additional.FirstOrDefault().Max,
-                        Min = item.Min ?? dbProduct.Additional.FirstOrDefault().Min,
-                        ProductId = dbProduct.ProductId,
-                        ProductIdList = item.ProductIdList ?? dbProduct.Additional.FirstOrDefault()?.ProductIdList
-                    }).ToList()
-                : new List<Additional>();
+            if (productDto == null || dbProduct == null)
+                return false;
 
-            var result = new ProductModel
+            // UPDATE PRODUCT FIELDS
+            if (!string.IsNullOrEmpty(productDto.Name)) dbProduct.Name = productDto.Name;
+            if (!string.IsNullOrEmpty(productDto.Description)) dbProduct.Description = productDto.Description;
+            if (!string.IsNullOrEmpty(productDto.Category)) dbProduct.Category = productDto.Category;
+            if (!string.IsNullOrEmpty(productDto.ImgUrl)) dbProduct.ImgUrl = productDto.ImgUrl;
+
+            if (productDto.InactivedDate.HasValue) dbProduct.InactivedDate = productDto.InactivedDate;
+            if (productDto.IsActived.HasValue) dbProduct.IsActived = productDto.IsActived;
+
+            dbProduct.Price = productDto.Price ?? dbProduct.Price;
+            dbProduct.PreviewPrice = productDto.PreviewPrice ?? dbProduct.PreviewPrice;
+
+            // UPDATE ADDITIONAL
+            if (productDto.Additional != null && productDto.Additional.Count > 0)
             {
-                ProductId = dbProduct.ProductId,
-                Name = productDto.Name ?? dbProduct.Name,
-                StoreId = productDto.StoreId ?? dbProduct.StoreId,
-                Category = productDto.Category ?? dbProduct.Category,
-                Additional = additionalDtoList,
-                Description = productDto.Description ?? dbProduct.Description,
-                ImgUrl = productDto.ImgUrl ?? dbProduct.ImgUrl,
-                IsActived = productDto.IsActived ?? dbProduct.IsActived,
-                InactivedDate = productDto.InactivedDate ?? dbProduct.InactivedDate,
-                Observations = productDto.Observations ?? dbProduct.Observations,
-                PreviewPrice = productDto.PreviewPrice ?? dbProduct.PreviewPrice,
-                Price = productDto.Price ?? dbProduct.Price
-            };
-            return result;
+                if (dbProduct.Additional == null || dbProduct.Additional.Count == 0)
+                    return false; // product has no additionals to update
+
+                foreach (var dtoItem in productDto.Additional)
+                {
+                    var existing = dbProduct.Additional.FirstOrDefault(a => a.Id == dtoItem.Id);
+
+                    // if ID doesn't match any additional, return false
+                    if (existing == null)
+                        return false;
+
+                    // update existing additional
+                    existing.Name = dtoItem.Name ?? existing.Name;
+                    existing.Category = dtoItem.Category ?? existing.Category;
+                    existing.Max = dtoItem.Max ?? existing.Max;
+                    existing.Min = dtoItem.Min ?? existing.Min;
+                    existing.Size = dtoItem.Size ?? existing.Size;
+
+                    var parsedProductIdList = Additional.ToStringArray(dtoItem.ProductIdList);
+                    if (parsedProductIdList != null)
+                        existing.ProductIdList = parsedProductIdList;
+                }
+            }
+
+            return true;
         }
+
 
         public static ProductModel Create(ProductCreate product, CancellationToken ct)
         {
             var additional = new List<Additional>();
-            if (product.Additional.Count != 0 || product.Additional != null)
+            if (product.Additional != null && product.Additional.Count != 0)
             {
+
                 foreach (var item in product.Additional)
                 {
                     additional.Add(new Additional
@@ -91,10 +106,9 @@ namespace MenuDigitalApi.DTOs.Transformers
                         Max = item.Max,
                         Min = item.Min,
                         Size = item.Size,
-                        ProductIdList = item.ProductIdList
+                        ProductIdList = Additional.ToStringArray(item.ProductIdList)
                     }
-                    );
-
+                );
                 }
             }
 

@@ -20,7 +20,7 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Request.Create
         public int Min { get; set; } = 0;
 
         public int Max { get; set; } = 0;
-        public string[]? ProductIdList { get; set; }
+        public Guid[]? ProductIdList { get; set; }
 
     }
 }

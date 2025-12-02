@@ -11,6 +11,6 @@ namespace MenuDigitalApi.DTOs
         public OrderStatus Status { get; set; }
         public string OrderedAt { get; set; }
         public string? FinishedAt { get; set; }
-        public string[] ProductIds { get; set; }
+        public Guid[] ProductIds { get; set; }
     }
 }

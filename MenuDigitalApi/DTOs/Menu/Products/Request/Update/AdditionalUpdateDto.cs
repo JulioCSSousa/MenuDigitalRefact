@@ -1,7 +1,11 @@
-﻿namespace MenuDigitalApi.DTOs.Menu.Products.Request.Update
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MenuDigitalApi.DTOs.Menu.Products.Request.Update
 {
     public class AdditionalUpdateDto
     {
+        [Required]
+        public Guid? Id { get; set; }
         public string? Category { get; set; }
 
         public string? Name { get; set; }
@@ -11,6 +15,6 @@
 
         public int? Max { get; set; } = 0;
 
-        public string[]? ProductIdList { get; set; }
+        public Guid[]? ProductIdList { get; set; }
     }
 }

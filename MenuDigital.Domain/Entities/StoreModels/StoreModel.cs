@@ -3,6 +3,7 @@ using MenuDigital.Domain.Entities.ValuesObjects;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MenuDigital.Domain.Entities   
 {
@@ -17,7 +18,7 @@ namespace MenuDigital.Domain.Entities
         [MaxLength(500)]
         public string? Description { get; set; }
         [Required(ErrorMessage = "Url is Required")]
-        public string StoreUrl { get; set; }
+        public string StoreUrl { get; set; } 
         public bool HasImage { get; set; }
         public bool Closed { get; set; }
         public Colors? Colors { get; set; }

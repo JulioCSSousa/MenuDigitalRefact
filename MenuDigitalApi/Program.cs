@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using CloudinaryDotNet;
 using MenuDigital.Application.Interfaces;
 using MenuDigital.Application.Interfaces.Menu;
 using MenuDigital.Application.Interfaces.Store;
@@ -19,7 +20,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.Services;
-
 
 namespace MenuDigitalApi
 {
@@ -90,7 +90,14 @@ namespace MenuDigitalApi
                     }
                 });
             });
+            var cloudName = builder.Configuration["Cloudinary:CloudName"];
+            var apiKey = builder.Configuration["Cloudinary:ApiKey"];
+            var apiSecret = builder.Configuration["Cloudinary:ApiSecret"];
 
+            var account = new Account(cloudName, apiKey, apiSecret);
+            var cloudinary = new Cloudinary(account);
+
+            builder.Services.AddSingleton(cloudinary);
 
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IStoreRepository, StoreRepository>();

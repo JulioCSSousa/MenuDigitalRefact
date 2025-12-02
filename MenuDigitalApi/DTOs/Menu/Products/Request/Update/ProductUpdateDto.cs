@@ -5,7 +5,6 @@ namespace MenuDigitalApi.DTOs.Menu.Products.Request.Update
 {
     public class ProductUpdateDto
     {
-        public Guid? StoreId { get; set; }
 
         [MaxLength(100)]
         public string? Name { get; set; } = default!;

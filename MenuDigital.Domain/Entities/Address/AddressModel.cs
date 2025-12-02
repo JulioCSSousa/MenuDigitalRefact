@@ -24,7 +24,7 @@ public class AddressModel
     public string? Complement { get; set; }
 
 
-    public StoreModel Store { get; set; }
+    public StoreModel Store { get; set; } = new StoreModel();
     [ForeignKey("StoreId")]
     public Guid StoreId { get; set; }
 

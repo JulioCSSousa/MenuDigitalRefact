@@ -19,6 +19,6 @@ namespace MenuDigital.Domain.Entities
         public OrderStatus Status { get; set; }
         public TimeSpan OrderedAt { get; set; }
         public TimeSpan? FinishedAt { get; set; }
-        public string[] ProductIds { get; set; }
+        public Guid[] ProductIds { get; set; } = new Guid[0];
     }
 }
