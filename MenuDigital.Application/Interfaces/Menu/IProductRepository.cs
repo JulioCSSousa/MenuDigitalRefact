@@ -2,6 +2,7 @@
 
 // Domain/Interfaces/IProductRepository.cs
 using MenuDigital.Domain.Entities;
+using MenuDigital.Domain.Entities.MenuModels;
 
 namespace MenuDigital.Application.Interfaces.Menu;
 public interface IProductRepository

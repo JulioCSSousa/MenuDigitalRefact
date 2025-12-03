@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MenuDigitalApi.Controllers.MenuController
 {
-    /*[ApiController]
+    [ApiController]
     [Route("api/[controller]")]
     public class AdditionalController : Controller
     {
@@ -20,9 +20,11 @@ namespace MenuDigitalApi.Controllers.MenuController
 
         [HttpPost("{productId}")]
         public async Task<IActionResult> CreateAddtional(AddtionalCreateDto additionalDto, Guid productId, CancellationToken ct)
-        {;
+        {
+            ;
             var dbProd = await _appDbContext.Products.FindAsync(productId);
-            if (dbProd == null) {
+            if (dbProd == null)
+            {
                 return BadRequest("Product Id does not exist");
             }
 
@@ -50,6 +52,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             }
 
             return Ok(); ;
-        }*/
+        }
+    }
     
 }

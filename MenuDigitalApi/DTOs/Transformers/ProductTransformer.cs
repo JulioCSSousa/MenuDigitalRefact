@@ -3,7 +3,6 @@ using MenuDigital.Domain.Entities.MenuModels;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Create;
 using MenuDigitalApi.DTOs.Menu.Products.Request.Update;
 using MenuDigitalApi.DTOs.Menu.Products.Response.ProductMenu;
-using SharpCompress.Common;
 
 namespace MenuDigitalApi.DTOs.Transformers
 {
@@ -64,7 +63,7 @@ namespace MenuDigitalApi.DTOs.Transformers
             if (productDto.Additional != null && productDto.Additional.Count > 0)
             {
                 if (dbProduct.Additional == null || dbProduct.Additional.Count == 0)
-                    return false; // product has no additionals to update
+                    return false; 
 
                 foreach (var dtoItem in productDto.Additional)
                 {
@@ -82,7 +81,12 @@ namespace MenuDigitalApi.DTOs.Transformers
                     existing.Size = dtoItem.Size ?? existing.Size;
 
                     var parsedProductIdList = Additional.ToStringArray(dtoItem.ProductIdList);
-                    if (parsedProductIdList != null)
+                    foreach (var item in parsedProductIdList)
+                    {
+                        if (parsedProductIdList != null)
+                            parsedProductIdList[parsedProductIdList.Length - 1] = item;
+                    }
+                    
                         existing.ProductIdList = parsedProductIdList;
                 }
             }

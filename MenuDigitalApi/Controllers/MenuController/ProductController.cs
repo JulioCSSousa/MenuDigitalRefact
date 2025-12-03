@@ -79,7 +79,7 @@ namespace MenuDigitalApi.Controllers.MenuController
             bool result = ProductTransformer.ProductUpdateDto(dbProduct, productDto);
             if (!result)
             {
-                return BadRequest("Confirm the Additional Ids");
+                return BadRequest("Confirm the Additional items id");
             }
             await _productService.UpdateAsync(dbProduct);
             return NoContent();
