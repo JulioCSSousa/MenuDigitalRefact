@@ -53,6 +53,17 @@ namespace MenuDigitalApi.Controllers.MenuController
 
             return Ok(); ;
         }
+        [HttpDelete("{AdditionalId}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var dbResult = await _appDbContext.Additionals.FindAsync(id);
+            if (dbResult == null)
+            {
+                return NotFound("Additional was not found");
+            }
+            _appDbContext.Additionals.Remove(dbResult);
+            await _appDbContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
-    
 }
