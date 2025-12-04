@@ -42,6 +42,14 @@ namespace MenuDigitalApi.DTOs.Transformers
             };
         }
 
+        public static string[]? ToStringArray(Guid[]? guidArray)
+        {
+            if (guidArray == null)
+                return null; // sinaliza que veio nulo (não quer alterar)
+            return guidArray.Select(g => g.ToString()).ToArray(); // pode ser empty array
+        }
+
+        // ProductUpdateDto (substituição direta)
         public static bool ProductUpdateDto(this ProductModel dbProduct, ProductUpdateDto productDto)
         {
             if (productDto == null || dbProduct == null)
@@ -63,36 +71,30 @@ namespace MenuDigitalApi.DTOs.Transformers
             if (productDto.Additional != null && productDto.Additional.Count > 0)
             {
                 if (dbProduct.Additional == null || dbProduct.Additional.Count == 0)
-                    return false; 
+                    return false;
 
                 foreach (var dtoItem in productDto.Additional)
                 {
                     var existing = dbProduct.Additional.FirstOrDefault(a => a.Id == dtoItem.Id);
-
-                    // if ID doesn't match any additional, return false
                     if (existing == null)
                         return false;
 
-                    // update existing additional
                     existing.Name = dtoItem.Name ?? existing.Name;
                     existing.Category = dtoItem.Category ?? existing.Category;
                     existing.Max = dtoItem.Max ?? existing.Max;
                     existing.Min = dtoItem.Min ?? existing.Min;
                     existing.Size = dtoItem.Size ?? existing.Size;
 
+                    // Substitui a lista pelo que veio no DTO:
                     var parsedProductIdList = Additional.ToStringArray(dtoItem.ProductIdList);
-                    foreach (var item in parsedProductIdList)
-                    {
-                        if (parsedProductIdList != null)
-                            parsedProductIdList[parsedProductIdList.Length - 1] = item;
-                    }
-                    
+                    if (parsedProductIdList != null) // null => cliente não enviou campo; array (até vazio) => substitui
                         existing.ProductIdList = parsedProductIdList;
                 }
             }
 
             return true;
         }
+
 
 
         public static ProductModel Create(ProductCreate product, CancellationToken ct)
